@@ -1,81 +1,90 @@
-let tilemap = [];
-let tilesX = 20;
-let tilesY = 10;
-let tileSize = 50;
-let tileID = 0;
-let textures = [];
-
-let spriteMap = [
-//   0   1   2   3   4   5   6   7   8   9   10  11  12  13  14  15  16  17  18  19 
-    [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //0
-    [0,  0,  0,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //1
-    [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //2
-    [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //3
-    [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //4
-    [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //5
-    [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //6
-    [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //7
-    [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //8
-    [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //9
-]
+let debug = false;
 
 function preload() {
     textures[0] = loadImage("art/tiles/grassy.png")
     textures[1] = loadImage("art/tiles/stone.png")
+
+    player.sprite = loadImage('art/characters/testPlayer.png')
+    testNPCSprite = loadImage('art/characters/testNPC.png') 
 }
 
 function setup() {
+    state = walk;
     createCanvas(1000, 500)
     createTileMap();
-}
 
-function draw() {
-    background(255)
-    displayTileMap();
+    testNPC = new NPC(testNPCSprite, 11, 3, testDialogue);
+    console.log(npcs);
     
 }
 
-function createTileMap() {
-    for (let x = 0; x < tilesX; x++) {
-        tilemap[x] = [];
-        for (let y = 0; y < tilesY; y++) {
-            tilemap[x][y] = new Tile(textures[spriteMap[y][x]], x, y, tileSize, tileID)
-            tileID++;
-        }
+function draw() {
+    handleState()
+    background(255)
+
+    if (state === walk || state === dialogue) {
+        mapEnabledDraw();
+    }
+
+    if (state === dialogue) {
+        console.log("Dialogue draw box")
+        dialogueDraw();
+    }
+
+}
+
+function mapEnabledDraw() {
+    //DISPLAY FUNCS
+
+    //The => is called an arrow function. What it's doing here is creating a temporary variable called 'tile' (notice it's not
+    //plural!), and saying "go inside the object in that variable and find a function calld display()". So when loopTilesAndRunFunc()
+    //gets to func(tilemap[x][y]), it knows that it should look inside the tile stored in tilemap at the x and y index and find and run
+    //a function called display(). It will do this for every single tile before doing it again for debug() if enabled.
+    loopTilesAndRunFunc(tile => tile.display());
+    player.display() //display player
+    testNPC.display();
+
+
+    //DEBUG CODE
+    if (debug) {
+        loopTilesAndRunFunc(tile => tile.debug()) //Adds grid to tileMap
+        console.log("current state is: " + state)
     }
 }
 
-function displayTileMap() {
-    for (let x = 0; x < tilesX; x++) {
-        for (let y = 0; y < tilesY; y++) {
-            tilemap[x][y].display();
-            tilemap[x][y].debug();
+
+
+function keyPressed() {
+
+    //IF PLAYER PRESSES SPACE KEY, SWITCHES BETWEEN DIALOGUE AND WALK STATE (FOR TESTING)
+
+    let spacebar = 32;
+    let shift = 16;
+    let slash = 191;
+
+    if (keyCode === spacebar) {
+        for (let npc = 0; npc < npcs.length; npc++) { //
+            for (let x = player.tileX - 1; x <= player.tileX + 1; x++) {
+                for (let y = player.tileY - 1; y <= player.tileY + 1; y++) {
+                    if (npcs[npc].tileX === x && npcs[npc].tileY === y) {
+                        console.log("npc found!")
+                    }
+                }
+            }
         }
     }
-}
 
-class Tile{
-    constructor(texture, tileX, tileY, tileSize, tileID) {
-        this.texture = texture;
-        this.tileX = tileX;
-        this.tileY = tileY;
-        this.tileSize = tileSize;
-        this.tileID = tileID;
-
-        this.xPos = this.tileX * this.tileSize;
-        this.yPos = this.tileY * this.tileSize;
+    //TOGGLES DEBUG DISPLAY FOR MAP
+    if (keyCode === slash) {
+        debug = !debug;
     }
 
-    display() {
-        image(this.texture, this.xPos, this.yPos, this.tileSize, this.tileSize)
-    }
-
-    debug() {
-        textSize(8)
-        text("X: " + this.tileX + ", Y: " + this.tileY, this.xPos + 2, this.yPos + 8) // +2 and +8 adds text padding to render text in right box
-
-        noFill();
-        stroke('black');
-        rect(this.xPos, this.yPos, this.tileSize, this.tileSize);
+    //TOOGLES BETWEEN WALK AND DIALOGUE STATES
+    if (keyCode === shift) { // FOR DEBUG
+        if (state === walk) {
+            state = dialogue;
+        } else if (state === dialogue) {
+            state = walk;
+        }
     }
 }
