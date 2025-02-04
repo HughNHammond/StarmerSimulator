@@ -9,13 +9,21 @@ function preload() {
 }
 
 function setup() {
-    state = walk;
-    createCanvas(1000, 500)
-    createTileMap();
-
-    testNPC = new NPC(testNPCSprite, 11, 3, testDialogue);
-    console.log(npcs);
+    //Player Object created as object so not here
     
+    state = walk; //Sets initial state
+
+    createCanvas(1000, 500)
+
+    createTileMap(); //Creates the TileMap (in tilemap.js)
+
+
+    //CREATE NPCs
+    createNPCs();
+
+
+    //CREATE DIALOGUEs
+    createDialogueNodes();
 }
 
 function draw() {
@@ -62,7 +70,8 @@ function keyPressed() {
     let shift = 16;
     let slash = 191;
 
-    if (keyCode === spacebar) {
+    if (keyCode === spacebar && state != dialogue) {
+        //CHECKS IF PLAYER IS NEAR NPC AND INITIATES DIALOGUE
         for (let npc = 0; npc < npcs.length; npc++) {
             let npcX = npcs[npc].tileX - player.tileX;
             let npcY = npcs[npc].tileY - player.tileY;
@@ -75,9 +84,12 @@ function keyPressed() {
                 case "-1,0": // NPC is to the left of the player
                     console.log("npc found!");
                     state = dialogue;
+                    startDialogue(npcs[npc]);
                     break;
             }
         }
+    } else if (keyCode === spacebar && state === dialogue) {
+        handleNextDialogueNode();
     }
 
     //TOGGLES DEBUG DISPLAY FOR MAP

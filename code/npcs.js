@@ -1,19 +1,32 @@
+//VARIABLE FOR ALL NPCs
 let npcs = [];
 
-let testNPC;
-let testNPCSprite;
+//CREATE SPECIFIC CHARACTERS
+let testNPC; //name
+let testNPCSprite; //sprite
+
+
+//FUNCTIONS
+
+function createNPCs() {
+    testNPC = new NPC("Test NPC", testNPCSprite, 11, 3, 0);
+}
+
 
 class NPC {
-    constructor(sprite, tileX, tileY, dialogueObject) {
+    constructor(name, sprite, tileX, tileY, startDialogueNode) {
+        this.name = name;
         this.sprite = sprite;
         this.tileX = tileX;
         this.tileY = tileY;
         this.xPos = tileX * tileSize;
         this.yPos = tileY * tileSize;
         this.size = tileSize;
-        this.dialogueObject = dialogueObject;
 
-        npcs.push(this)
+        npcs.push(this);
+
+        this.startDialogueNode = startDialogueNode;
+        this.currentDialogueNode = startDialogueNode;
     }
 
     display() {
