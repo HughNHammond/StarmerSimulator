@@ -63,13 +63,19 @@ function keyPressed() {
     let slash = 191;
 
     if (keyCode === spacebar) {
-        for (let npc = 0; npc < npcs.length; npc++) { //
-            for (let x = player.tileX - 1; x <= player.tileX + 1; x++) {
-                for (let y = player.tileY - 1; y <= player.tileY + 1; y++) {
-                    if (npcs[npc].tileX === x && npcs[npc].tileY === y) {
-                        console.log("npc found!")
-                    }
-                }
+        for (let npc = 0; npc < npcs.length; npc++) {
+            let npcX = npcs[npc].tileX - player.tileX;
+            let npcY = npcs[npc].tileY - player.tileY;
+        
+            switch (`${npcX},${npcY}`) { //the `` here creates a string template, where it takes the value of dx and dy
+                                     //and creates a string with those values.
+                case "0,-1": // NPC is above the player
+                case "0,1":  // NPC is below the player
+                case "1,0":  // NPC is to the right of the player
+                case "-1,0": // NPC is to the left of the player
+                    console.log("npc found!");
+                    state = dialogue;
+                    break;
             }
         }
     }
