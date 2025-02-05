@@ -1,3 +1,5 @@
+//TEST
+
 //DIALOGUE BOX VISUAL PROPERTIES VARIABLES
 boxOriginX = tileSize * 3; //x positions for box on screen
 boxOriginY = tileSize * 6; //y positions for box on screen
