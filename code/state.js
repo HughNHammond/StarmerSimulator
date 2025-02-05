@@ -1,9 +1,11 @@
+//STATE SYSTEM FOR CURRENT PLAY STATE
+
 let transition = 0;
 let dialogue = 1;
 let walk = 2;
 let state = transition;
 
-function handleState() {
+function handlePlayState() {
     switch (state) {
         case transition:
             console.log(state)
@@ -21,4 +23,12 @@ function handleState() {
         default:
             console.log("ERROR! THERE IS NO STATE!")
     }
+}
+
+//-------------------------------------------------------------------------------------------------------------//
+
+//STATE SYSTEM FOR CURRENT DAY
+
+function handleDayState() {
+    //code
 }

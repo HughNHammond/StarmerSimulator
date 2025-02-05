@@ -27,7 +27,7 @@ function setup() {
 }
 
 function draw() {
-    handleState()
+    handlePlayState()
     background(255)
 
     if (state === walk || state === dialogue) {
