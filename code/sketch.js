@@ -35,7 +35,6 @@ function draw() {
     }
 
     if (state === dialogue) {
-        console.log("Dialogue draw box")
         dialogueDraw();
     }
 
@@ -51,6 +50,7 @@ function mapEnabledDraw() {
     loopTilesAndRunFunc(tile => tile.display());
     player.display() //display player
     testNPC.display();
+    testNPC2.display();
 
 
     //DEBUG CODE
@@ -89,7 +89,7 @@ function keyPressed() {
             }
         }
     } else if (keyCode === spacebar && state === dialogue) {
-        handleNextDialogueNode();
+        handleNextDialogueNode(); //checks whether to end Dialogue or move to next Node
     }
 
     //TOGGLES DEBUG DISPLAY FOR MAP

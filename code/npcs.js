@@ -3,13 +3,15 @@ let npcs = [];
 
 //CREATE SPECIFIC CHARACTERS
 let testNPC; //name
+let testNPC2;
 let testNPCSprite; //sprite
 
 
 //FUNCTIONS
 
 function createNPCs() {
-    testNPC = new NPC("Test NPC", testNPCSprite, 11, 3, 0);
+    testNPC = new NPC("Test NPC 1", testNPCSprite, 4, 1, 0);
+    testNPC2 = new NPC("Test NPC 2", testNPCSprite, 6, 1, 20)
 }
 
 
@@ -25,7 +27,7 @@ class NPC {
 
         npcs.push(this);
 
-        this.startDialogueNode = startDialogueNode;
+        this.startDialogueNode = startDialogueNode; //What dialogue they will start when dialogue is started
         this.currentDialogueNode = startDialogueNode;
     }
 
