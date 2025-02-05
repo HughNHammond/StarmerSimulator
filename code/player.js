@@ -75,6 +75,14 @@ let player = {
             nextTileVertical = this.tileY + this.dirY;
         }
 
+        for (x = 0; x < npcs.length; x++) {
+            if (npcs[x].tileX === nextTileHorizontal && npcs[x].tileY === nextTileVertical) 
+            {
+                console.log("NPC found!")
+                return;
+            }
+        }
+
         //check is that tile is in bounds of the map
         // remember: && means AND (i.e. below is asking if ALL conditions are true)
         if (
