@@ -78,8 +78,9 @@ let player = {
         for (x = 0; x < npcs.length; x++) {
             if (npcs[x].tileX === nextTileHorizontal && npcs[x].tileY === nextTileVertical) 
             {
-                console.log("NPC found!")
-                return;
+                if (npcs[x].active) {
+                     return;
+                }
             }
         }
 

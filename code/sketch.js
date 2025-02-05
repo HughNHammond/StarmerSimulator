@@ -49,8 +49,7 @@ function mapEnabledDraw() {
     //a function called display(). It will do this for every single tile before doing it again for debug() if enabled.
     loopTilesAndRunFunc(tile => tile.display());
     player.display() //display player
-    testNPC.display();
-    testNPC2.display();
+    drawNPCs();
 
 
     //DEBUG CODE

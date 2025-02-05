@@ -1,5 +1,3 @@
-//TEST
-
 //DIALOGUE BOX VISUAL PROPERTIES VARIABLES
 boxOriginX = tileSize * 3; //x positions for box on screen
 boxOriginY = tileSize * 6; //y positions for box on screen
@@ -10,8 +8,6 @@ boxTextPadding = 50;
 
 let dialogueToDisplay;
 let currentNode;
-
-
 
 //FUNCs TO SETUP DIALOGUE BOX
 function dialogueDraw() { //draw function for dialogue
@@ -30,9 +26,10 @@ function drawText() { //DRAWS TEXT TO BOX
     dialogueToDisplay = currentNode.npc.name + ": " + currentNode.text; // sets text for each node
 
     textSize(20)
-    strokeWeight(4)
-    stroke("black");
-    fill("white");
+    strokeWeight(0)
+    textStyle("bold")
+    stroke(255, 131, 131);
+    fill(131, 105, 179);
     text(dialogueToDisplay, boxOriginX + boxTextPadding, boxOriginY + boxTextPadding, boxSizeX - (boxTextPadding*1.5), boxSizeY - boxTextPadding);
     //console.log(currentNode.link)
 }
@@ -50,6 +47,10 @@ function handleNextDialogueNode() {
 
         dialogueNodes[nextStartNode].npc.startDialogueNode = nextStartNode; //gets NPC object for next node and sets their dialogueStartNode to new node
         console.log(testNPC)
+    }
+
+    if (currentNode.func != null) {
+        currentNode.func(currentNode.param1);
     }
 
     //2. Checks if dialogueNode has link; if null, ends dialogue.
@@ -73,60 +74,95 @@ let dialogueNodes = []
 function createDialogueNodes() {
 
     //NODES 0-19: TestNPC
-    new DialogueNode(testNPC, //speaker object
-                        "Hello, I'm the first " + testNPC.name, //string to display
-                        0, //ID for node
-                        1, //next node
-                        null //ID to change startNode of an NPC; null = end dialogue
+    new DialogueNode(
+        testNPC, //speaker object
+        "Hello, I'm the first " + testNPC.name, //string to display
+        0, //ID for node
+        1, //next node
+        null, //ID to change startNode of an NPC; null = end dialogue
+        null //calls function
     )
 
-    new DialogueNode(testNPC, //speaker object
-                        "I just started saying something else!", //string to display
-                        1, //ID for node
-                        null, //ID for nextNode
-                        2 //ID to change startNode of an NPC; null = end dialogue
+    new DialogueNode(
+        testNPC, //speaker object
+        "I just started saying something else!", //string to display
+        1, //ID for node
+        null, //ID for nextNode
+        2, //ID to change startNode of an NPC; null = end dialogue
+        null
     )
 
-    new DialogueNode(testNPC,
-                        "Sometimes if you talk to me more than once, I'll say something new! But this is my last line I can activate by myself",
-                        2,
-                        null,
-                        null
+    new DialogueNode(
+        testNPC,
+        "Sometimes if you talk to me more than once, I'll say something new! But this is my last line I can activate by myself. Hey, where did that guy come from?",
+        2,
+        null,
+        null,
+        activateNPC,
+        testNPC2
     )
 
-    new DialogueNode(testNPC,
-                        "Hey, my dialogue just got changed by that guy!",
-                        3,
-                        null,
-                        null
+    new DialogueNode(
+        testNPC,
+        "Hey, my dialogue just got changed by that guy!",
+        3,
+        null,
+        null,
+        null
     )
 
     //NODES 20-39: TestNPC 2
-    new DialogueNode(testNPC2,
-                        "I have my own dialogue as well!",
-                        20,
-                        21,
-                        null
+    new DialogueNode(
+        testNPC2,
+        "I have my own dialogue as well!",
+        20,
+        21,
+        null,
+        null
     )
 
-    new DialogueNode(testNPC2,
-                        "I've just changed the startNode on that other guy",
-                        21,
-                        null,
-                        3
+    new DialogueNode(
+        testNPC2,
+        "I've just changed the startNode on that other guy",
+        21,
+        null,
+        3,
+        null
     )
 }  
 
+let responseNodes = [];
 
+function createResponseNode() {
+    new responseNode(
+        "this is a response",
+        0,
+        4,
+        null
+    )
+}
 
 class DialogueNode {
-    constructor(npc, text, dialogueID, link, setStartNode) {
+    constructor(npc, text, dialogueID, link, setStartNode, func, param1) {
         this.npc = npc; //sets speaker name
         this.text = text; //string containing dialogue
         this.dialogueID = dialogueID; //index of dialogue
         this.link = link; // link to next dialogueNode; set to null if no dialogue
         this.setStartNode = setStartNode; //use to modify the startNode for dialogue of NPC; set to null if no change required
+        this.func = func;
+        this.param1 = param1;
 
         dialogueNodes[dialogueID] = this;
+    }
+}
+
+class responseNode {
+    constructor(text, responseID, link, func) {
+        this.text = text;
+        this.responseID = responseID;
+        this.link = link;
+        this.func = func;
+
+        responseNodes[responseID] = this;
     }
 }
