@@ -6,13 +6,15 @@ let boxSizeY = tileSize * 5; //sets box height
 let cornerRadius = 30; //variable for smoothing dialogue box corners
 let boxTextPadding = 50;
 
-let dialogueToDisplay;
-let currentNode;
+
 
 //FUNCs TO SETUP DIALOGUE BOX
 function dialogueDraw() { //draw function for dialogue
     drawDialogueBox();
-    drawText();
+
+    if (state = dialogue) {
+        drawText();
+    }
 }
 
 
@@ -39,7 +41,7 @@ function drawDialogueBox() { //DRAWS BOX ON SCREEN
 }
 
 function drawText() { //DRAWS TEXT TO BOX
-    let dialogueToDisplay = currentNode.npc.name + ": " + currentNode.text; // sets text for each node
+    let dialogueToDisplay = currentNode.s.name + ": " + currentNode.m; // sets text for each node
 
     textSize(18)
     strokeWeight(0)
@@ -60,36 +62,36 @@ function createButtons() {
 }
 
 //SETS TEXT FOR DIALOGUE
+
+let currentEvent;
+let currentNode;
+
+let responseText;
+let dialogueToDisplay;
+
+
 function startDialogue(npc) {
-    currentNode = dialogueNodes[npc.startDialogueNode]; //Gets the index of the start Node for NPC and sets it to the currentNode
+    currentEvent = dialogueNodes[npc.startDialogueNode]; //Gets the index of the start Node for NPC and sets it to the currentNode
+    currentNode = 0;
 }
 
 function handleNextDialogueNode() {
-    //1. Checks whether the current dialogue has a value to reset the startDialogueNode of an NPC. If yes, it checks which NPC
-    //   the dialogueNode refers to and resets their startDialogueNode. If null, does nothing.
-    if (currentNode.setStartNode != null) {
-        let nextStartNode = currentNode.setStartNode; //temp variable for index of next StartNode
+    if (currentNode.answer != null) {
+        responseText = currentNode.answer;
+        handleResponseText(currentNode.answer);
+    }
+}
 
-        dialogueNodes[nextStartNode].npc.startDialogueNode = nextStartNode; //gets NPC object for next node and sets their dialogueStartNode to new node
-        console.log(testNPC)
+function handleResponseText(response) {
+    state = response;
+
+    for (x = 0; x < response.length; x++) {
+        id = x + 1;
+        let buffer = 0;
+        if (x > 0) { buffer = 20; }
+        text(x + ": " + response[x].m, boxOriginX + boxTextPadding, boxOriginY + boxTextPadding + buffer)
     }
 
-    if (currentNode.func != null) {
-        currentNode.func(currentNode.param1);
-    }
-
-    //2. Checks if dialogueNode has link; if null, ends dialogue.
-    //3. Or if not null, sets currentNode to the linked node.
-    if (currentNode.link != null) {
-        currentNode = dialogueNodes[currentNode.link]; //sets the next Dialogue to display
-    } 
-    else if (currentNode.response != null) {
-        triggerResponse(currentNode.response);
-    } 
-    else if (currentNode.link === null) {
-        console.log("End dialogue called")
-        endDialogue(walk); // ends dialogue and returns to walk state
-    }
 }
 
 function endDialogue(nextState) {
@@ -98,10 +100,45 @@ function endDialogue(nextState) {
 
 //CREATE DIALOGUE NODES
 
-let dialogueNodes = []
+let dialogueNodes = [];
+let testNode;
+let proceed = 0;
+let response = 1;
+let end = 2;
+
+
+testDialogueEvent1 = [
+        {   s: testNPC,
+            m: "Hello, I'm the first" + testNPC.name,},
+        
+        {   s: testNPC,
+            m: "How are you?",
+            answer: [ 
+                {m: "I'm good", next: "responseGood"},
+                {m: "I'm bad", next: "responseBad"}
+             ]
+        },
+
+        {
+            s: testNPC,
+            label: "responseGood",
+            m: "oh yay",
+            next: "end",
+            func: changeNode(s)
+        },
+
+        {
+            s: testNPC,
+            label: "responseBad",
+            m: "oh no! Well maybe my friend can help.",
+            next: "end",
+            func: activateNPC(testNPC2)
+        }
+    ]
 
 function createDialogueNodes() {
 
+    
     //NODES 0-19: TestNPC
     new DialogueNode(
         testNPC, //speaker object

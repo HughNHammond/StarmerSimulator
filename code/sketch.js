@@ -19,13 +19,14 @@ function setup() {
 
     createTileMap(); //Creates the TileMap (in tilemap.js)
 
+    //CREATE DIALOGUEs
+    createDialogueNodes();
 
     //CREATE NPCs
     createNPCs();
 
 
-    //CREATE DIALOGUEs
-    createDialogueNodes();
+
     
 }
 
@@ -33,11 +34,11 @@ function draw() {
     handlePlayState()
     background(255)
 
-    if (state === walk || state === dialogue) {
+    if (state === walk || state === dialogue || state === response) {
         mapEnabledDraw();
     }
 
-    if (state === dialogue) {
+    if (state === dialogue || state === response) {
         dialogueDraw();
     }
 

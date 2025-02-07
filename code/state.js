@@ -20,6 +20,10 @@ function handlePlayState() {
             player.move();
             break;
 
+        case response:
+            dialogueDraw();
+            break;
+
         default:
             console.log("ERROR! THERE IS NO STATE!")
     }
