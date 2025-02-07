@@ -10,10 +10,12 @@ function preload() {
 
 function setup() {
     //Player Object created as object so not here
+    //fullscreen(true);
     
+
     state = walk; //Sets initial state
 
-    createCanvas(1000, 500)
+    createCanvas(tilesX*tileSize, tilesY*tileSize)
 
     createTileMap(); //Creates the TileMap (in tilemap.js)
 
@@ -24,6 +26,7 @@ function setup() {
 
     //CREATE DIALOGUEs
     createDialogueNodes();
+    
 }
 
 function draw() {
