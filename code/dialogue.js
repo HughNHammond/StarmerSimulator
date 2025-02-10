@@ -5,9 +5,13 @@ let boxSizeX = (tilesX - 4) * tileSize; //sets box length
 let boxSizeY = tileSize * 5; //sets box height
 let cornerRadius = 30; //variable for smoothing dialogue box corners
 let boxTextPadding = 50;
+let textOriginX = boxOriginX + boxTextPadding;
+let textOriginY = boxOriginY + boxTextPadding;
 
 let dialogueToDisplay;
 let currentNode;
+
+let response = false; //bool to check if we are in response or not.
 
 //FUNCs TO SETUP DIALOGUE BOX
 function dialogueDraw() { //draw function for dialogue
@@ -31,22 +35,27 @@ function drawDialogueBox() { //DRAWS BOX ON SCREEN
 
 
     //DRAW BOX
-    stroke(255, 131, 131); //soft red
+    stroke(5, 93, 169); //soft red
     strokeWeight(10);
-    fill(255, 245, 116); //soft yellow
+    fill(228, 0, 59); //soft yellow
+   
     rect(boxOriginX, boxOriginY, boxSizeX, boxSizeY, cornerRadius)
     
 }
 
 function drawText() { //DRAWS TEXT TO BOX
-    let dialogueToDisplay = currentNode.npc.name + ": " + currentNode.text; // sets text for each node
+    if (!response) {
+        let dialogueToDisplay = currentNode.npc.name + ": " + currentNode.text; // sets text for each node
 
-    textSize(18)
-    strokeWeight(0)
-    textStyle("bold")
-    stroke(255, 131, 131);
-    fill(131, 105, 179);
-    text(dialogueToDisplay, boxOriginX + boxTextPadding, boxOriginY + boxTextPadding, boxSizeX - (boxTextPadding*1.5), boxSizeY - boxTextPadding);
+        textSize(18)
+        strokeWeight(0)
+        textStyle("bold")
+        stroke(255, 131, 131);
+        fill(255,255,255);
+        text(dialogueToDisplay, boxOriginX + boxTextPadding, boxOriginY + boxTextPadding, boxSizeX - (boxTextPadding*1.5), boxSizeY - boxTextPadding);
+    } else {
+        startResponse();
+    }
 }
 
 function createButtons() {
@@ -61,112 +70,205 @@ function createButtons() {
 
 //SETS TEXT FOR DIALOGUE
 function startDialogue(npc) {
-    currentNode = dialogueNodes[npc.startDialogueNode]; //Gets the index of the start Node for NPC and sets it to the currentNode
+    currentEvent = npc.startNode;
+    currentNode = npc.startNode[0]; //Gets the index of the start Node for NPC and sets it to the currentNode
 }
 
 function handleNextDialogueNode() {
-    //1. Checks whether the current dialogue has a value to reset the startDialogueNode of an NPC. If yes, it checks which NPC
-    //   the dialogueNode refers to and resets their startDialogueNode. If null, does nothing.
-    if (currentNode.setStartNode != null) {
-        let nextStartNode = currentNode.setStartNode; //temp variable for index of next StartNode
 
-        dialogueNodes[nextStartNode].npc.startDialogueNode = nextStartNode; //gets NPC object for next node and sets their dialogueStartNode to new node
-        console.log(testNPC)
+    //1. Check function
+    if (currentNode.info.func != null) {
+        if (Array.isArray(currentNode.info.param)) { //checks to see if param is an array (i.e. multiple parameters)
+            currentNode.info.func(...currentNode.info.param); //passes each value in array as individual argument
+        }
+        else {
+            currentNode.info.func(currentNode.info.param); //passes *one* argument
+        }
     }
 
-    if (currentNode.func != null) {
-        currentNode.func(currentNode.param1);
+    //2. Check if response node available
+    if (currentNode.info.response != null) {
+        response = true;
+        return;
     }
 
-    //2. Checks if dialogueNode has link; if null, ends dialogue.
-    //3. Or if not null, sets currentNode to the linked node.
-    if (currentNode.link != null) {
-        currentNode = dialogueNodes[currentNode.link]; //sets the next Dialogue to display
-    } 
-    else if (currentNode.response != null) {
-        triggerResponse(currentNode.response);
-    } 
-    else if (currentNode.link === null) {
-        console.log("End dialogue called")
+    //3. Checks if dialogueNode has link; if null, ends dialogue.
+    //4. Or if not null, sets currentNode to the linked node.
+    if (currentNode.info.link != null) {
+        currentNode = currentEvent[currentNode.info.link]; //sets the next Dialogue to display
+    }
+    else if (currentNode.info.link === null) {
         endDialogue(walk); // ends dialogue and returns to walk state
     }
 }
+
+function startResponse() {
+    //1. Set box values
+    //2. Run for loop
+    //3 Check where mouse is then set fill
+    //4. draw box
+    //5. Add text
+
+    let textOriginY = boxOriginY + boxTextPadding;
+
+    for (let x = 0; x < currentNode.info.response.length; x++) {
+        selectionOriginX = textOriginX - 19;
+        selectionOriginY = textOriginY + (x * tileSize) - 30;
+        selectionSizeX = boxSizeX - tileSize;
+
+        let mouseHover = 
+            mouseX > selectionOriginX &&
+            mouseX < selectionOriginX + selectionSizeX &&
+            mouseY > selectionOriginY &&
+            mouseY < selectionOriginY + tileSize;
+
+        // strokeWeight(1); FOR DEBUG (draws line around selectable boxes)
+        noStroke()
+
+        textSize(18)
+        strokeWeight(0)
+        textStyle("bold")
+
+        if (mouseHover) {
+            //Cursor over selection
+            fill(255,255,255);
+            rect(selectionOriginX, selectionOriginY, selectionSizeX, tileSize, cornerRadius);
+            fill(0, 0, 0);
+
+            if(mouseIsPressed) {
+                currentNode = currentEvent[currentNode.info.response[x].goto]
+                response = false;
+                return;
+            } 
+        } else {
+            noFill();
+            rect(selectionOriginX, selectionOriginY, selectionSizeX, tileSize, cornerRadius);
+            fill(255,255,255);
+        }
+
+        stroke(255, 131, 131);
+        text(x + 1 + ". " + currentNode.info.response[x].r, textOriginX, textOriginY + (x * tileSize))
+    }
+}
+
 
 function endDialogue(nextState) {
     state = nextState;
 }
 
+function setStartNode(npc, node) {
+    console.log("Called!")
+    npc.startNode = node;
+}
+
 //CREATE DIALOGUE NODES
 
 let dialogueNodes = []
+let testEvent = [];
+let testEvent2 = [];
+let testEvent3 = [];
+
+let responseEvent1 = [];
 
 function createDialogueNodes() {
 
+    testEvent = [
     //NODES 0-19: TestNPC
-    new DialogueNode(
-        testNPC, //speaker object
-        "Hello, I'm the first " + testNPC.name, //string to display
-        0, //ID for node
-        1, //next node
-        null, //ID to change startNode of an NPC; null = end dialogue
-        null, //calls function
-        null, //parameter for function
-        null //responseNode
-    )
+        new DialogueNode(
+            testNPC, //speaker object
+            "Hello, I'm the first " + testNPC.name + ".", //string to display
+            0, //ID for node
+            testEvent,
+            {
+                link: 1,
+            }
+        ),
 
-    new DialogueNode(
-        testNPC, //speaker object
-        "I just started saying something else!", //string to display
-        1, //ID for node
-        null, //ID for nextNode
-        2, //ID to change startNode of an NPC; null = end dialogue
-        null,//ID to change startNode of an NPC; null = end dialogue
-        null, //calls function
-        null, //parameter for function
-        null //responseNode
-    )
+        new DialogueNode(
+            testNPC,
+            "Here is some dialogue. This one changes my next node!",
+            1,
+            testEvent,
+            {
+                link: null,
+                func: setStartNode,
+                param: [testNPC, testEvent2]
+            }
+        ),
+    ]
 
-    new DialogueNode(
-        testNPC,
-        "Sometimes if you talk to me more than once, I'll say something new! But this is my last line I can activate by myself. Hey, where did that guy come from?",
-        2,
-        null,
-        null,
-        activateNPC,
-        testNPC2,
-        null
-    )
+    testEvent2 = [
+        new DialogueNode(
+            testNPC,
+            "Oh, I have some new dialogue. Hey, who's that?",
+            0,
+            testEvent2,
+            {
+                link: null,
+                func: activateNPC,
+                param: testNPC2
+            }
+        )
+    ]
 
-    new DialogueNode(
-        testNPC,
-        "Hey, my dialogue just got changed by that guy!",
-        3,
-        null,
-        null,
-        null
-    )
+    testEvent3 = [
+        new DialogueNode(
+            testNPC2,
+            "I have nothing to say to you",
+            0,
+            testEvent3,
+            {
+                link: null
+            }
+        )
+    ]
 
-    //NODES 20-39: TestNPC 2
-    new DialogueNode(
-        testNPC2,
-        "I have my own dialogue as well!",
-        20,
-        21,
-        null,
-        null
-    )
+    responseEvent1 = [
+        new DialogueNode(
+            testNPC,
+            "How are you?",
+            0,
+            responseEvent1,
+            {
+                response: [
+                    {r: "Yeah, I'm ok",
+                        goto: 1 
+                    },
 
-    new DialogueNode(
-        testNPC2,
-        "I've just changed the startNode on that other guy",
-        21,
-        null,
-        3,
-        null
-    )
+                    {r: "I'm terrible.",
+                        goto: 2
+                    },
+                    {r: "this is a third response",
+                        goto: 1
+                    },
+                    {r: "and this is a fourht response",
+                        goto: 1
+                    }
+                ]
+            }
+        ),
+
+        new DialogueNode(
+            testNPC,
+            "Yay, I'm so glad to hear that",
+            1,
+            responseEvent1,
+            {
+                link: null,
+            }
+        ),
+
+        new DialogueNode(
+            testNPC,
+            "Oh no, that sucks!",
+            2,
+            responseEvent1,
+            {
+                link: null,
+            }
+        )
+    ]
 }  
-
-let responseNodes = [];
 
 function createResponseNode() {
     new responseNode(
@@ -178,17 +280,20 @@ function createResponseNode() {
 }
 
 class DialogueNode {
-    constructor(npc, text, dialogueID, link, setStartNode, func, param1, responseNode) {
+    constructor(npc, text, dialogueID, dialogueEvent, info) {
         this.npc = npc; //sets speaker name
         this.text = text; //string containing dialogue
-        this.dialogueID = dialogueID; //index of dialogue
-        this.link = link; // link to next dialogueNode; set to null if no dialogue
-        this.setStartNode = setStartNode; //use to modify the startNode for dialogue of NPC; set to null if no change required
-        this.func = func;
-        this.param1 = param1;
-        this.responseNode = responseNode;
+        //this.dialogueID = dialogueID; //index of dialogue
+        this.dialogueEvent = dialogueEvent;
+        // this.link = link; // link to next dialogueNode; set to null if no dialogue
+        // this.setStartNode = setStartNode; //use to modify the startNode for dialogue of NPC; set to null if no change required
+        // this.func = func;
+        // this.param1 = param1;
+        // this.responseNode = responseNode;
 
-        dialogueNodes[dialogueID] = this;
+        this.info = info;
+
+        dialogueEvent.push(this);
     }
 }
 
@@ -198,7 +303,5 @@ class responseNode {
         this.responseID = responseID;
         this.link = link;
         this.func = func;
-
-        responseNodes[responseID] = this;
     }
 }

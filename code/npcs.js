@@ -11,10 +11,10 @@ let testNPCSprite; //sprite
 //FUNCTIONS
 
 function createNPCs() {
-    testNPC = new NPC("Test NPC 1", testNPCSprite, 4, 1, 0, 0, true);
+    testNPC = new NPC("Test NPC 1", testNPCSprite, 4, 1, responseEvent1, 0, true);
     npcs[testNPC.characterID] = testNPC;
 
-    testNPC2 = new NPC("Test NPC 2", testNPCSprite, 4, 7, 20, 1, false)
+    testNPC2 = new NPC("Test NPC 2", testNPCSprite, 4, 7, testEvent3, 1, false)
     npcs[testNPC2.characterID] = testNPC2;
 }
 
@@ -40,7 +40,7 @@ function displayNPCs() {
 
 
 class NPC {
-    constructor(name, sprite, tileX, tileY, startDialogueNode, characterID, active) {
+    constructor(name, sprite, tileX, tileY, startNode, characterID, active) {
         this.name = name;
         this.sprite = sprite;
         
@@ -55,8 +55,8 @@ class NPC {
         this.size = tileSize;
         this.characterID = characterID;
 
-        this.startDialogueNode = startDialogueNode; //What dialogue they will start when dialogue is started
-        this.currentDialogueNode = startDialogueNode;
+        this.startNode = startNode; //What dialogue they will start when dialogue is started
+        this.currentNode = startNode;
 
 
         this.active = active;
@@ -69,7 +69,6 @@ class NPC {
     handleActiveState() {
         if (this.active) {
             activeNPCs[this.characterID] = this;
-            console.log("activated")
         }
     }
 }
