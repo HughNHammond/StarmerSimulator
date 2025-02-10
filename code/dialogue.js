@@ -4,33 +4,44 @@ let boxOriginY; //y positions for box on screen
 let boxSizeX = (tilesX - 4) * tileSize; //sets box length
 let boxSizeY = tileSize * 5; //sets box height
 let cornerRadius = 30; //variable for smoothing dialogue box corners
-let boxTextPadding = 50;
-let textOriginX = boxOriginX + boxTextPadding;
-let textOriginY = boxOriginY + boxTextPadding;
+let boxTextPadding = 50; //pads text to make sure it appears within the text box
+let textOriginX = boxOriginX + boxTextPadding; //sets origin of text for response
+let textOriginY = boxOriginY + boxTextPadding; // sets origin of text for response
 
 let dialogueToDisplay;
+let nextNode;
 let currentNode;
 
+let mouseHovering = null;
+
 let response = false; //bool to check if we are in response or not.
+let responseSelected = false;
 
 //FUNCs TO SETUP DIALOGUE BOX
 function dialogueDraw() { //draw function for dialogue
     drawDialogueBox();
-    drawText();
+
+    //CODE TO CHECK HOW TO DRAW TEXT
+    if (!response) {
+        drawText(); //Draw NPC dialogue
+    }
+    else {
+        drawResponse(); //Create dialogue selection menu
+    }
 }
-
-
 
 function drawDialogueBox() { //DRAWS BOX ON SCREEN
     //SET boxOriginY BY PLAYER POSITION
     if (player.yPos <= (tilesY/2) * tileSize) {
         //BOX BELOW PLAYER
         boxTextPadding = 50;
-        boxOriginY = tileSize * 6;
+        boxOriginY = (tileSize * 6);
+        textOriginY = boxOriginY + boxTextPadding; 
     } 
     else {
         boxTextPadding = 70;
-        boxOriginY = 0 - tileSize; 
+        boxOriginY = -30; 
+        textOriginY = boxOriginY + boxTextPadding;
     }
 
 
@@ -44,29 +55,19 @@ function drawDialogueBox() { //DRAWS BOX ON SCREEN
 }
 
 function drawText() { //DRAWS TEXT TO BOX
-    if (!response) {
-        let dialogueToDisplay = currentNode.npc.name + ": " + currentNode.text; // sets text for each node
+let dialogueToDisplay = currentNode.npc.name + ": " + currentNode.text; // sets text for each node
 
-        textSize(18)
-        strokeWeight(0)
-        textStyle("bold")
-        stroke(255, 131, 131);
-        fill(255,255,255);
-        text(dialogueToDisplay, boxOriginX + boxTextPadding, boxOriginY + boxTextPadding, boxSizeX - (boxTextPadding*1.5), boxSizeY - boxTextPadding);
-    } else {
-        startResponse();
-    }
+    textSize(18)
+    strokeWeight(0)
+    textStyle("bold")
+    stroke(255, 131, 131);
+    fill(255,255,255);
+    textAlign(LEFT)
+    text(dialogueToDisplay, boxOriginX + boxTextPadding, boxOriginY + boxTextPadding, boxSizeX - (boxTextPadding*1.5), boxSizeY - boxTextPadding);
 }
 
-function createButtons() {
-
-    let buttonOriginX = 720;
-    let buttonOriginY = tileSize;
-    let buttonSizeX = tileSize*4.5;
-    let buttonSizeY = tileSize*2;
-
-    rect(buttonOriginX, buttonOriginY, buttonSizeX, buttonSizeY)
-}
+//--------------------------------//
+//FUNCTIONS TO HANDLE DIALOGUE PROGRESSION
 
 //SETS TEXT FOR DIALOGUE
 function startDialogue(npc) {
@@ -74,7 +75,11 @@ function startDialogue(npc) {
     currentNode = npc.startNode[0]; //Gets the index of the start Node for NPC and sets it to the currentNode
 }
 
-function handleNextDialogueNode() {
+function handleNextDialogueNode(link) {
+
+    //THIS IS CALLED WHENEVER THE MOUSE OR SPACEBAR IS CLICKED AND NOT IN A RESPONSE STATE
+    //IT RUNS ONCE IMMEDIATELY UPON BEING CLICKED, SO IT IS ONLY UPDATED AT THE MOMENT BEFORE
+    //THE UPDATE TAKES PLACE
 
     //1. Check function
     if (currentNode.info.func != null) {
@@ -90,28 +95,38 @@ function handleNextDialogueNode() {
     if (currentNode.info.response != null) {
         response = true;
         return;
+    } else {
+        response = false;
     }
 
     //3. Checks if dialogueNode has link; if null, ends dialogue.
     //4. Or if not null, sets currentNode to the linked node.
     if (currentNode.info.link != null) {
-        currentNode = currentEvent[currentNode.info.link]; //sets the next Dialogue to display
+        nextNode = currentEvent[currentNode.info.link]; //sets the next Dialogue to display
+        updateDialogueNode()
     }
     else if (currentNode.info.link === null) {
         endDialogue(walk); // ends dialogue and returns to walk state
     }
 }
 
-function startResponse() {
+function updateDialogueNode() {
+    currentNode = nextNode;
+}
+
+//--------------------------------//
+//FUNCTIONS TO HANDLE RESPONSES
+
+function drawResponse() {
     //1. Set box values
     //2. Run for loop
     //3 Check where mouse is then set fill
     //4. draw box
     //5. Add text
 
-    let textOriginY = boxOriginY + boxTextPadding;
 
     for (let x = 0; x < currentNode.info.response.length; x++) {
+        
         selectionOriginX = textOriginX - 19;
         selectionOriginY = textOriginY + (x * tileSize) - 30;
         selectionSizeX = boxSizeX - tileSize;
@@ -135,17 +150,15 @@ function startResponse() {
             rect(selectionOriginX, selectionOriginY, selectionSizeX, tileSize, cornerRadius);
             fill(0, 0, 0);
 
-            if(mouseIsPressed) {
-                currentNode = currentEvent[currentNode.info.response[x].goto]
-                response = false;
-                return;
-            } 
+            mouseHovering = currentEvent[currentNode.info.response[x].goto]
+
         } else {
             noFill();
             rect(selectionOriginX, selectionOriginY, selectionSizeX, tileSize, cornerRadius);
             fill(255,255,255);
         }
 
+        textAlign(LEFT)
         stroke(255, 131, 131);
         text(x + 1 + ". " + currentNode.info.response[x].r, textOriginX, textOriginY + (x * tileSize))
     }
@@ -157,18 +170,22 @@ function endDialogue(nextState) {
 }
 
 function setStartNode(npc, node) {
-    console.log("Called!")
     npc.startNode = node;
 }
 
-//CREATE DIALOGUE NODES
+//--------------------------------//
+//DIALOGUE NODES
 
+
+//Variables for each dialogue event (each one contains dialogueNodes and responseNodes)
 let dialogueNodes = []
 let testEvent = [];
 let testEvent2 = [];
 let testEvent3 = [];
 
 let responseEvent1 = [];
+
+//FUNCITON THAT CREATES DIALOGUE NODES AT RUN-TIME AND ASSIGNS THEM TO A POSITION IN EACH EVENT ARRAY
 
 function createDialogueNodes() {
 
@@ -264,21 +281,38 @@ function createDialogueNodes() {
             2,
             responseEvent1,
             {
-                link: null,
+                link: 3,
+            }
+        ),
+
+        new DialogueNode(
+            testNPC,
+            "Have you considered being inexplicably transphobic?",
+            3,
+            responseEvent1,
+            {
+                response: [
+                    {r: "No, I'm not a freak, Wes.",
+                        goto: 4},
+                    {r: "No, becuase I'm not a cunt, Wes",
+                        goto: 4}
+                    ]
+            }
+        ),
+
+        new DialogueNode(
+            testNPC,
+            "I have never known love.",
+            4,
+            responseEvent1,
+            {
+                link: null
             }
         )
     ]
 }  
 
-function createResponseNode() {
-    new responseNode(
-        "this is a response",
-        0,
-        4,
-        null
-    )
-}
-
+//DIALOGUE NODE CLASS
 class DialogueNode {
     constructor(npc, text, dialogueID, dialogueEvent, info) {
         this.npc = npc; //sets speaker name

@@ -3,6 +3,7 @@ playerStartY = 2;
 
 let player = {
     //Physical Properties
+    name: "Keir Starmer",
     sprite: null,
     tileSize: tileSize,
     size: tileSize,
@@ -21,8 +22,20 @@ let player = {
     dirY: 0,
     speed: 5,
 
+    draw: function() {
+        player.display();
+        player.displayName(); //for Debug
+    },
+
     display: function() {
         image(this.sprite, this.xPos, this.yPos, this.size, this.size)
+    },
+
+    displayName: function() {
+        fill("black");
+        textSize(10);
+        textAlign(CENTER);
+        text(this.name, this.xPos + tileSize/2, this.yPos - 2);
     },
 
     setDirection: function() {

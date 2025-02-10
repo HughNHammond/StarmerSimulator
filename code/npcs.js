@@ -11,10 +11,10 @@ let testNPCSprite; //sprite
 //FUNCTIONS
 
 function createNPCs() {
-    testNPC = new NPC("Test NPC 1", testNPCSprite, 4, 1, responseEvent1, 0, true);
+    testNPC = new NPC("Wes Streeting", testNPCSprite, 3, 7, responseEvent1, 0, true);
     npcs[testNPC.characterID] = testNPC;
 
-    testNPC2 = new NPC("Test NPC 2", testNPCSprite, 4, 7, testEvent3, 1, false)
+    testNPC2 = new NPC("Rachel Reeves", testNPCSprite, 4, 7, testEvent3, 1, false)
     npcs[testNPC2.characterID] = testNPC2;
 }
 
@@ -35,6 +35,7 @@ function drawNPCs() {
 function displayNPCs() {
     for (x = 0; x < activeNPCs.length; x++) {
             activeNPCs[x].display();
+            activeNPCs[x].displayName();
     }
 }
 
@@ -64,6 +65,13 @@ class NPC {
 
     display() {
         image(this.sprite, this.xPos, this.yPos, this.size, this.size)
+    }
+
+    displayName() {
+        fill("black");
+        textSize(10);
+        textAlign(CENTER);
+        text(this.name, this.xPos + tileSize/2, this.yPos - 2);
     }
 
     handleActiveState() {

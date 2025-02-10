@@ -51,7 +51,7 @@ function mapEnabledDraw() {
     //gets to func(tilemap[x][y]), it knows that it should look inside the tile stored in tilemap at the x and y index and find and run
     //a function called display(). It will do this for every single tile before doing it again for debug() if enabled.
     loopTilesAndRunFunc(tile => tile.display());
-    player.display() //display player
+    player.draw()
     drawNPCs();
 
 
@@ -62,15 +62,15 @@ function mapEnabledDraw() {
     }
 }
 
+//KEYS
 
+let spacebar = 32;
+let shift = 16;
+let slash = 191;
 
 function keyPressed() {
 
     //IF PLAYER PRESSES SPACE KEY, SWITCHES BETWEEN DIALOGUE AND WALK STATE (FOR TESTING)
-
-    let spacebar = 32;
-    let shift = 16;
-    let slash = 191;
 
     if (keyCode === spacebar && state != dialogue) {
         //CHECKS IF PLAYER IS NEAR NPC AND INITIATES DIALOGUE
@@ -99,7 +99,7 @@ function keyPressed() {
         debug = !debug;
     }
 
-    //TOOGLES BETWEEN WALK AND DIALOGUE STATES
+    //TOOGLES BETWEEN WALK AND DIALOGUE STATES FOR DEBUG
     if (keyCode === shift) { // FOR DEBUG
         if (state === walk) {
             state = dialogue;
@@ -107,4 +107,21 @@ function keyPressed() {
             state = walk;
         }
     }
+}
+
+function mousePressed() {
+    console.log(mouseHovering)
+    
+    if (state === dialogue && !response && mouseHovering === null) {
+        handleNextDialogueNode();
+    }
+
+    if (mouseHovering != null) {
+        console.log("response")
+        currentNode = mouseHovering;
+        mouseHovering = null;
+        response = false;
+    }
+    
+
 }
