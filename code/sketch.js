@@ -100,13 +100,22 @@ function keyPressed() {
                     break;
             }
         }
-    } else if (keyCode === controls.spacebar && state === dialogue && !response && !responseSelected) {
+    } else if (keyCode === controls.spacebar && state === dialogue && !response) {
         handleNextDialogueNode(); //checks whether to end Dialogue or move to next Node
-    } else if (keyCode === controls.spacebar && state === dialogue && response && responseSelected) {
+    } else if (keyCode === controls.spacebar && state === dialogue && response) {
         console.log("response")
-        currentNode = mouseHovering;
-        responseSelected = false;
+        currentNode = currentEvent[currentNode.info.response[currentSelection].goto];
+        currentSelection = 0;
         response = false;
+    }
+
+    if (response) {
+        if (keyCode === controls.up) {
+        currentSelection--
+        }
+        else if (keyCode === controls.down) {
+        currentSelection++
+        }
     }
 
     //TOGGLES DEBUG DISPLAY FOR MAP

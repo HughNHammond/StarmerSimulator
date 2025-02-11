@@ -1,0 +1,4 @@
+ON DIALOGUE SYSTEM
+
+Note: I currently have it set up so functions will ONLY run when NPCs talk. They do not run when the player talks.
+If I want to run something from there in the future, I will need to modify the code.

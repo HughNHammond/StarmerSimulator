@@ -12,10 +12,6 @@ let dialogueToDisplay;
 let nextNode;
 let currentNode;
 
-let mouseHovering = null;
-
-let response = false; //bool to check if we are in response or not.
-let responseSelected = false;
 
 //FUNCs TO SETUP DIALOGUE BOX
 function dialogueDraw() { //draw function for dialogue
@@ -75,7 +71,7 @@ function startDialogue(npc) {
     currentNode = npc.startNode[0]; //Gets the index of the start Node for NPC and sets it to the currentNode
 }
 
-function handleNextDialogueNode(link) {
+function handleNextDialogueNode() {
 
     //THIS IS CALLED WHENEVER THE MOUSE OR SPACEBAR IS CLICKED AND NOT IN A RESPONSE STATE
     //IT RUNS ONCE IMMEDIATELY UPON BEING CLICKED, SO IT IS ONLY UPDATED AT THE MOMENT BEFORE
@@ -93,6 +89,7 @@ function handleNextDialogueNode(link) {
 
     //2. Check if response node available
     if (currentNode.info.response != null) {
+        currentSelection = 0;
         response = true;
         return;
     } else {
@@ -117,6 +114,12 @@ function updateDialogueNode() {
 //--------------------------------//
 //FUNCTIONS TO HANDLE RESPONSES
 
+
+let mouseHovering = null;
+
+let response = false; //bool to check if we are in response or not.
+let currentSelection = 0;
+
 function drawResponse() {
     //1. Set box values
     //2. Run for loop
@@ -124,6 +127,7 @@ function drawResponse() {
     //4. draw box
     //5. Add text
 
+    currentSelection = clamp(currentSelection, 0, currentNode.info.response.length - 1);
 
     for (let x = 0; x < currentNode.info.response.length; x++) {
         
@@ -131,39 +135,60 @@ function drawResponse() {
         selectionOriginY = textOriginY + (x * tileSize) - 30;
         selectionSizeX = boxSizeX - tileSize;
 
-        let mouseHover = 
-            mouseX > selectionOriginX &&
-            mouseX < selectionOriginX + selectionSizeX &&
-            mouseY > selectionOriginY &&
-            mouseY < selectionOriginY + tileSize;
+        noStroke();
 
-        // strokeWeight(1); FOR DEBUG (draws line around selectable boxes)
-        noStroke()
-
-        textSize(18)
-        strokeWeight(0)
-        textStyle("bold")
-
-        if (mouseHover) {
+        //Set Selected
+        if (currentSelection === x) {
             //Cursor over selection
-            fill(255,255,255);
+            fill(255, 255, 255);
             rect(selectionOriginX, selectionOriginY, selectionSizeX, tileSize, cornerRadius);
             fill(0, 0, 0);
-
-            mouseHovering = currentEvent[currentNode.info.response[x].goto]
-
         } else {
             noFill();
             rect(selectionOriginX, selectionOriginY, selectionSizeX, tileSize, cornerRadius);
-            fill(255,255,255);
+            fill(255, 255, 255);
         }
 
+        //mouseControls(x);
+        
+
+
+        //fill(255, 255, 255) //TEMP FILL
+        textSize(18)
+        textStyle("bold")
         textAlign(LEFT)
-        stroke(255, 131, 131);
+        strokeWeight(0)
+        stroke("black");
         text(x + 1 + ". " + currentNode.info.response[x].r, textOriginX, textOriginY + (x * tileSize))
     }
 }
 
+
+function mouseControls(x) {
+    let mouseHover = mouseX > selectionOriginX &&
+        mouseX < selectionOriginX + selectionSizeX &&
+        mouseY > selectionOriginY &&
+        mouseY < selectionOriginY + tileSize;
+
+    // strokeWeight(1); FOR DEBUG (draws line around selectable boxes)
+    noStroke();
+
+
+
+    if (mouseHover) {
+        //Cursor over selection
+        fill(255, 255, 255);
+        rect(selectionOriginX, selectionOriginY, selectionSizeX, tileSize, cornerRadius);
+        fill(0, 0, 0);
+
+        mouseHovering = currentEvent[currentNode.info.response[x].goto];
+
+    } else {
+        noFill();
+        rect(selectionOriginX, selectionOriginY, selectionSizeX, tileSize, cornerRadius);
+        fill(255, 255, 255);
+    }
+}
 
 function endDialogue(nextState) {
     state = nextState;
@@ -296,19 +321,11 @@ function createDialogueNodes() {
                         goto: 4},
                     {r: "No, becuase I'm not a cunt, Wes",
                         goto: 4}
-                    ]
+                    ],
+                func: console.log,
+                param:"Function worked"
             }
         ),
-
-        new DialogueNode(
-            testNPC,
-            "I have never known love.",
-            4,
-            responseEvent1,
-            {
-                link: null
-            }
-        )
     ]
 }  
 
