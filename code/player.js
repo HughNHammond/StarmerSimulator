@@ -44,25 +44,25 @@ let player = {
             //if not, then let's set the direction the player is travelling!
 
             //UP
-            if (keyIsDown(87)) {
+            if (keyIsDown(controls.up)) {
                 this.dirX = 0;
                 this.dirY = -1; //direction is up!
             }
 
             //DOWN
-            if (keyIsDown(83)) {
+            if (keyIsDown(controls.down)) {
                 this.dirX = 0;
                 this.dirY = 1; //direction is down!
             }
 
             //LEFT
-            if (keyIsDown(65)) {
+            if (keyIsDown(controls.left)) {
                 this.dirX = -1; //direction is left!
                 this.dirY = 0; 
             }
 
             //RIGHT
-            if (keyIsDown(68)) {
+            if (keyIsDown(controls.right)) {
                 this.dirX = 1; //direction is right!
                 this.dirY = 0;
             }

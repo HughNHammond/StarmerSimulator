@@ -63,16 +63,26 @@ function mapEnabledDraw() {
 }
 
 //KEYS
+let controls = {
+    //Directions
+    up: 87,
+    down: 83,
+    left: 65,
+    right: 68,
 
-let spacebar = 32;
-let shift = 16;
-let slash = 191;
+    //Select
+    spacebar: 32,
+
+    //Debug
+    shift: 16,
+    slash: 191
+}
 
 function keyPressed() {
 
     //IF PLAYER PRESSES SPACE KEY, SWITCHES BETWEEN DIALOGUE AND WALK STATE (FOR TESTING)
 
-    if (keyCode === spacebar && state != dialogue) {
+    if (keyCode === controls.spacebar && state != dialogue) {
         //CHECKS IF PLAYER IS NEAR NPC AND INITIATES DIALOGUE
         for (let npc = 0; npc < npcs.length; npc++) {
             let npcX = npcs[npc].tileX - player.tileX;
@@ -90,17 +100,22 @@ function keyPressed() {
                     break;
             }
         }
-    } else if (keyCode === spacebar && state === dialogue) {
+    } else if (keyCode === controls.spacebar && state === dialogue && !response && !responseSelected) {
         handleNextDialogueNode(); //checks whether to end Dialogue or move to next Node
+    } else if (keyCode === controls.spacebar && state === dialogue && response && responseSelected) {
+        console.log("response")
+        currentNode = mouseHovering;
+        responseSelected = false;
+        response = false;
     }
 
     //TOGGLES DEBUG DISPLAY FOR MAP
-    if (keyCode === slash) {
+    if (keyCode === controls.slash) {
         debug = !debug;
     }
 
     //TOOGLES BETWEEN WALK AND DIALOGUE STATES FOR DEBUG
-    if (keyCode === shift) { // FOR DEBUG
+    if (keyCode === controls.shift) { // FOR DEBUG
         if (state === walk) {
             state = dialogue;
         } else if (state === dialogue) {
