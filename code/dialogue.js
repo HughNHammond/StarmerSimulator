@@ -20,6 +20,8 @@ let flipDialogueBox = false;
 function dialogueDraw() { //draw function for dialogue
     drawDialogueBox();
 
+    textFont(dialogueFont) //Sets font for dialogue
+
     //CODE TO CHECK HOW TO DRAW TEXT
     if (gameState === dialogue) {
         drawText(); //Draw NPC dialogue
@@ -42,7 +44,7 @@ function drawDialogueBox() { //DRAWS BOX ON SCREEN
         //Box Above player
         boxTextPaddingY = 100;
         boxOriginY = -70; 
-        textOriginY = boxOriginY + boxTextPaddingY;
+        textOriginY = boxOriginY + boxTextPaddingY + 10;
     }
 
     if (debug && flipDialogueBox) {
@@ -55,7 +57,7 @@ function drawDialogueBox() { //DRAWS BOX ON SCREEN
         //Box Above player
         boxTextPaddingY = 100;
         boxOriginY = -70; 
-        textOriginY = boxOriginY + boxTextPaddingY;
+        textOriginY = boxOriginY + boxTextPaddingY + 10;
     }
 
 
@@ -71,13 +73,13 @@ function drawDialogueBox() { //DRAWS BOX ON SCREEN
 function drawText() { //DRAWS TEXT TO BOX
 let dialogueToDisplay = currentNode.npc.name + ": " + currentNode.text; // sets text for each node
 
-    textSize(18)
+    textSize(22)
     strokeWeight(0)
     textStyle("bold")
     stroke(255, 131, 131);
     fill(255,255,255);
     textAlign(LEFT)
-    text(dialogueToDisplay, boxOriginX + boxTextPaddingX, boxOriginY + boxTextPaddingY, boxSizeX - (boxTextPaddingX*1.5), boxSizeY - boxTextPaddingY);
+    text(dialogueToDisplay, textOriginX, textOriginY, boxSizeX - (boxTextPaddingX*1.5), boxSizeY - boxTextPaddingY);
 }
 
 //--------------------------------//
@@ -139,7 +141,7 @@ function drawResponse() {
         
         let selectionSizeY = 50;
         selectionOriginX = textOriginX - 19;
-        selectionOriginY = textOriginY + (x * selectionSizeY) - 26;
+        selectionOriginY = textOriginY + (x * selectionSizeY) - 32;
         selectionSizeX = boxSizeX - tileSize;
         
 
@@ -158,7 +160,7 @@ function drawResponse() {
         }
 
         //fill(255, 255, 255) //TEMP FILL
-        textSize(18)
+        textSize(22)
         textStyle("bold")
         textAlign(LEFT)
         strokeWeight(0)

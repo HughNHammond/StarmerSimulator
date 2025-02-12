@@ -69,7 +69,7 @@ class NPC {
     }
 
     displayName() {
-        
+        textFont(dialogueFont)
         fill(0, 0, 0);
         textSize(10);
         textAlign(CENTER);

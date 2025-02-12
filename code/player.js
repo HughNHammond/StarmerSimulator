@@ -32,6 +32,7 @@ let player = {
     },
 
     displayName: function() {
+        textFont(dialogueFont)
         fill("black");
         textSize(10);
         textAlign(CENTER);

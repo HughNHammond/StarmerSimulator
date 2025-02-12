@@ -1,6 +1,9 @@
 /-----ON DIALOGUE SYSTEM-----\
 
 FUNCTIONS
-I currently have it set up so functions will ONLY run when NPCs talk. They do not run when the player talks.If I want to run something from there in the future, I will need to modify the code.
 
+On Function Timing
 Functions are called AFTER a dialogue node is DISMISSED and as the next one comes on! If you want to call a function BEFORE a dialogue box appears, it needs to be called in the code for the node prior to it. I can look into updating this later if I need to.
+
+On Function Parameters
+If you want to pass MULTIPLE PARAMETERS through a function, you need to pass them as an array. s

@@ -11,13 +11,14 @@ function preload() {
 
     startFont = loadFont("font/PressStart2P.ttf")
     startImage = loadImage("art/portraits/startImage.png")
+
+    dialogueFont = loadFont("font/Pixellari.ttf")
 }
 
 function setup() {
     //Player Object created as object so not here
     //fullscreen(true);
 
-    textFont(startFont)
     transitionState = waitTransition
     switchState(transition)
 

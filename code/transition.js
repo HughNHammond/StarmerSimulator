@@ -72,6 +72,7 @@ function getDayText() {
     //console.log(currentDay)
     switch (currentDay) {
         case start: //start
+            textFont(startFont)
             textAlign(CENTER)
 
             fill(0, 0, 0, fade);
@@ -82,7 +83,6 @@ function getDayText() {
             text("STARMER SIMULATOR", width/2, height/2+200)
             textSize(20)
             text("Press the space bar to begin", width/2, height/2+250)
-        
             
             tint(255, fade)
             imageMode(CENTER)
