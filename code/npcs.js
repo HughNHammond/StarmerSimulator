@@ -7,14 +7,15 @@ let testNPC; //name
 let testNPC2;
 let testNPCSprite; //sprite
 
-
+let inactive = 0;
+let active = 1;
 //FUNCTIONS
 
 function createNPCs() {
-    testNPC = new NPC("Wes Streeting", testNPCSprite, 3, 7, responseEvent1, 0, true);
+    testNPC = new NPC("Wes Streeting", testNPCSprite, 3, 4, responseEvent1, 0, active);
     npcs[testNPC.characterID] = testNPC;
 
-    testNPC2 = new NPC("Rachel Reeves", testNPCSprite, 4, 7, testEvent3, 1, false)
+    testNPC2 = new NPC("Rachel Reeves", testNPCSprite, 4, 2, endStateEvent, 1, inactive)
     npcs[testNPC2.characterID] = testNPC2;
 }
 
@@ -68,9 +69,12 @@ class NPC {
     }
 
     displayName() {
-        fill("black");
+        
+        fill(0, 0, 0);
         textSize(10);
         textAlign(CENTER);
+        textStyle(NORMAL);
+        noStroke();
         text(this.name, this.xPos + tileSize/2, this.yPos - 2);
     }
 

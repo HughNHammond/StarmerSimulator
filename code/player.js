@@ -35,6 +35,8 @@ let player = {
         fill("black");
         textSize(10);
         textAlign(CENTER);
+        textStyle(NORMAL);
+        noStroke();
         text(this.name, this.xPos + tileSize/2, this.yPos - 2);
     },
 
