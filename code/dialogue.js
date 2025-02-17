@@ -1,8 +1,8 @@
 //DIALOGUE BOX VISUAL PROPERTIES VARIABLES
-let boxOriginX = tileSize * 2; //x positions for box on screen
+let boxOriginX = (tileSize*tilesX)*0.05; //x positions for box on screen
 let boxOriginY; //y positions for box on screen
-let boxSizeX = (tilesX - 4) * tileSize; //sets box length
-let boxSizeY = tileSize * 5; //sets box height
+let boxSizeX = (tileSize*tilesX)*0.9; //sets box length
+let boxSizeY = (tileSize * tilesX)*0.4; //sets box height
 let cornerRadius = 30; //variable for smoothing dialogue box corners
 let boxTextPaddingY = 50; //pads text to make sure it appears within the text box
 let boxTextPaddingX = 50;
@@ -14,6 +14,11 @@ let currentNode;
 let currentSelection = 0;
 
 let flipDialogueBox = false;
+
+let press = false;
+
+let pressRating = 50;
+let currentPublicScore = 20;
 
 
 //FUNCs TO SETUP DIALOGUE BOX
@@ -29,15 +34,19 @@ function dialogueDraw() { //draw function for dialogue
     else if (gameState === respond) {
         drawResponse(); //Create dialogue selection menu
     }
+
+    if (press) {
+        drawPerformanceBox()
+    }
 }
 
 function drawDialogueBox() { //DRAWS BOX ON SCREEN
     //SET boxOriginY BY PLAYER POSITION
  
-    if (player.yPos <= (tilesY/2) * tileSize) {
+    if (player.yPos <= (tilesY/2) * tileSize && !press) {
         //BOX BELOW PLAYER
         boxTextPaddingY = 50;
-        boxOriginY = height - (tileSize * 4);
+        boxOriginY = height*0.6
         textOriginY = boxOriginY + boxTextPaddingY; 
     }
     else {
@@ -50,7 +59,7 @@ function drawDialogueBox() { //DRAWS BOX ON SCREEN
     if (debug && flipDialogueBox) {
         //BOX BELOW PLAYER
         boxTextPaddingY = 50;
-        boxOriginY = height - (tileSize * 4);
+        boxOriginY = height - (height*0.75);
         textOriginY = boxOriginY + boxTextPaddingY; 
     }
     else if (debug && !flipDialogueBox) {
@@ -71,15 +80,61 @@ function drawDialogueBox() { //DRAWS BOX ON SCREEN
 }
 
 function drawText() { //DRAWS TEXT TO BOX
-let dialogueToDisplay = currentNode.npc.name + ": " + currentNode.text; // sets text for each node
+    let dialogueToDisplay;
+    
+    if (press) dialogueToDisplay = currentNode.text;
+    else dialogueToDisplay = currentNode.npc.name + ": " + currentNode.text; // sets text for each node
 
-    textSize(22)
+    textSize(19)
     strokeWeight(0)
     textStyle("bold")
     stroke(255, 131, 131);
     fill(255,255,255);
     textAlign(LEFT)
     text(dialogueToDisplay, textOriginX, textOriginY, boxSizeX - (boxTextPaddingX*1.5), boxSizeY - boxTextPaddingY);
+}
+
+//--------------------------------//
+//PRESS BOX
+
+function drawPerformanceBox() {
+    stroke(5, 93, 169); //labour blue
+    strokeWeight(10);
+    fill(228, 0, 59); //labour red
+
+    let boxOriginX = width - 300;
+    let boxOriginY = height/2;
+    let boxSizeX = 320;
+    let boxSizeY = 120;
+
+    rect(boxOriginX, boxOriginY, boxSizeX, boxSizeY);
+
+    strokeWeight(1)
+
+    
+    stroke(255, 255, 255)
+    fill(0, 0, 0)
+    text("PRESS RATING: ..........", boxOriginX + 20, boxOriginY + 30)
+
+    rect(boxOriginX + 19, boxOriginY + 40, boxSizeX - 50, 10)
+    noStroke()
+    fill(5, 93, 169); //labour red
+    let perCentPressScore = (boxSizeX - 50) / (100 / pressRating)
+    rect(boxOriginX + 19, boxOriginY + 40, perCentPressScore, 10)
+
+    stroke(255, 255, 255)
+    fill(0, 0, 0)
+    text("PUBLIC RATING: ..........", boxOriginX + 20, boxOriginY + 80)
+
+    rect(boxOriginX + 19, boxOriginY + 90, boxSizeX - 50, 10)
+    noStroke()
+    fill(5, 93, 169); //labour red
+
+    let perCentPublicScore = (boxSizeX - 50) / (100 / currentPublicScore)
+    rect(boxOriginX + 19, boxOriginY + 90, perCentPublicScore, 10)
+
+
+
 }
 
 //--------------------------------//
@@ -144,7 +199,6 @@ function drawResponse() {
         selectionOriginY = textOriginY + (x * selectionSizeY) - 32;
         selectionSizeX = boxSizeX - tileSize;
         
-
         noStroke();
 
         //Set Selected
@@ -160,7 +214,7 @@ function drawResponse() {
         }
 
         //fill(255, 255, 255) //TEMP FILL
-        textSize(22)
+        textSize(19)
         textStyle("bold")
         textAlign(LEFT)
         strokeWeight(0)
@@ -215,7 +269,11 @@ let testEvent3 = [];
 
 let responseEvent1 = [];
 
-let endStateEvent = []
+let endStateEvent = [];
+
+let pressDayOne = [];
+
+let podiumEvents = []
 
 //FUNCITON THAT CREATES DIALOGUE NODES AT RUN-TIME AND ASSIGNS THEM TO A POSITION IN EACH EVENT ARRAY
 
@@ -224,8 +282,8 @@ function createDialogueNodes() {
     testEvent = [
     //NODES 0-19: TestNPC
         new DialogueNode(
-            testNPC, //speaker object
-            "Hello, I'm the first " + testNPC.name + ".", //string to display
+            streeting, //speaker object
+            "Hello, I'm the first " + streeting.name + ".", //string to display
             0, //ID for node
             testEvent,
             {
@@ -234,7 +292,7 @@ function createDialogueNodes() {
         ),
 
         new DialogueNode(
-            testNPC,
+            streeting,
             "Here is some dialogue. This one changes my next node!",
             1,
             testEvent,
@@ -246,7 +304,7 @@ function createDialogueNodes() {
 
     testEvent2 = [
         new DialogueNode(
-            testNPC,
+            streeting,
             "Oh, I have some new dialogue. Hey, who's that?",
             0,
             testEvent2,
@@ -272,7 +330,7 @@ function createDialogueNodes() {
 
     responseEvent1 = [
         new DialogueNode(
-            testNPC,
+            streeting,
             "How are you?",
             0,
             responseEvent1,
@@ -296,19 +354,19 @@ function createDialogueNodes() {
         ),
 
         new DialogueNode(
-            testNPC,
+            streeting,
             "Yay, I'm so glad to hear that",
             1,
             responseEvent1,
             {
                 link: null,
                 func: setStartNode,
-                param: [testNPC, testEvent2]
+                param: [streeting, testEvent2]
             }
         ),
 
         new DialogueNode(
-            testNPC,
+            streeting,
             "Oh no, that sucks!",
             2,
             responseEvent1,
@@ -318,7 +376,7 @@ function createDialogueNodes() {
         ),
 
         new DialogueNode(
-            testNPC,
+            streeting,
             "Have you considered being inexplicably transphobic?",
             3,
             responseEvent1,
@@ -333,7 +391,7 @@ function createDialogueNodes() {
         ),
 
         new DialogueNode(
-            testNPC,
+            streeting,
             "Yeah, I've never known love.",
             4,
             responseEvent1,
@@ -380,11 +438,40 @@ function createDialogueNodes() {
                 link: null
             }
         )
+    ],
+
+
+    ///---PODIUM NODES---///
+
+
+    podiumEvents = [
+        null, // to match indexes to day number
+
+        pressDayOne = [
+            new DialogueNode(
+                podium,
+                "This is the opening dialogue to the podium.",
+                0,
+                pressDayOne,
+                {
+                    link: 1,
+                }
+            ),
+
+            new DialogueNode(
+                podium,
+                "There should be info on your performance up there.",
+                1,
+                pressDayOne,
+                {
+                    link: null,
+                }
+            )
+        ]
+
 
 
     ]
-
-
 }  
 
 //DIALOGUE NODE CLASS

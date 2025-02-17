@@ -3,19 +3,19 @@ let npcs = [];
 let activeNPCs = [];
 
 //CREATE SPECIFIC CHARACTERS
-let testNPC; //name
+let streeting; //name
 let testNPC2;
-let testNPCSprite; //sprite
+let streetingSprite; //sprite
 
 let inactive = 0;
 let active = 1;
 //FUNCTIONS
 
 function createNPCs() {
-    testNPC = new NPC("Wes Streeting", testNPCSprite, 3, 4, responseEvent1, 0, active);
-    npcs[testNPC.characterID] = testNPC;
+    streeting = new NPC("Wes Streeting", streetingSprite, 3, 4, responseEvent1, 0, active);
+    npcs[streeting.characterID] = streeting;
 
-    testNPC2 = new NPC("Rachel Reeves", testNPCSprite, 4, 2, endStateEvent, 1, inactive)
+    testNPC2 = new NPC("Rachel Reeves", streetingSprite, 4, 2, endStateEvent, 1, inactive)
     npcs[testNPC2.characterID] = testNPC2;
 }
 

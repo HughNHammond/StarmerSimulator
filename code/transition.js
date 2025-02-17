@@ -78,15 +78,18 @@ function getDayText() {
             fill(0, 0, 0, fade);
             rect(0, 0, width, height);
         
-            textSize(50),
+            textSize(45),
             fill(228, 0, 59, fade)
-            text("STARMER SIMULATOR", width/2, height/2+200)
-            textSize(20)
-            text("Press the space bar to begin", width/2, height/2+250)
+            textStyle(BOLD)
+            text("STARMER", width/2, height/2+130)
+            text("SIMULATOR", width/2, height/2+180)
+            textStyle(NORMAL)
+            textSize(17)
+            text("Press the space bar to begin", width/2, height/2+220)
             
             tint(255, fade)
             imageMode(CENTER)
-            image(startImage, width/2, 240, 700, 400)
+            image(startImage, width/2, 180, 550, 300)
             noTint();
             imageMode(CORNER)
             break;

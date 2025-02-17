@@ -37,6 +37,12 @@ function keyPressed() {
                     break;
             }
         }
+
+        if (player.tileX === podium.tileX && player.tileY === podium.tileY) {
+            switchState(dialogue);
+            press = true;
+            startDialogue(podium)
+        }
     } 
 
     //IF PLAYER IN DIALOGUE AND NO RESPONSE, MOVE TO NEXT NODE (OR END)

@@ -15,11 +15,11 @@ function handlePlayState() {
             break;
 
         case dialogue:
-            dialogueDraw()
+            dialogueDraw();
             break;
 
         case respond:
-            dialogueDraw()
+            dialogueDraw();
             break;
 
         case walk:

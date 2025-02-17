@@ -2,23 +2,36 @@ let debug = false;
 
 let startFont;
 
+let podium;
+let podiumSprite;
+
+//IMAGES
+
 function preload() {
     textures[0] = loadImage("art/tiles/grassy.png")
     textures[1] = loadImage("art/tiles/stone.png")
 
-    player.sprite = loadImage('art/characters/testPlayer.png')
-    testNPCSprite = loadImage('art/characters/testNPC.png') 
+    player.sprites[0] = loadImage('art/characters/starmer/starmer_up.png');
+    player.sprites[1] = loadImage('art/characters/starmer/starmer_down.png');
+    player.sprites[2] = loadImage('art/characters/starmer/starmer_left.png');
+    player.sprites[3] = loadImage('art/characters/starmer/starmer_right.png');
+    streetingSprite = loadImage('art/characters/streeting/streeting_down.png') 
 
     startFont = loadFont("font/PressStart2P.ttf")
     startImage = loadImage("art/portraits/startImage.png")
 
     dialogueFont = loadFont("font/Pixellari.ttf")
+
+    podiumSprite = loadImage("art/objects/podium.png")
 }
 
 function setup() {
+
+    noSmooth();
     //Player Object created as object so not here
     //fullscreen(true);
 
+    player.sprite = player.sprites[1]
     transitionState = waitTransition
     switchState(transition)
 
@@ -33,6 +46,8 @@ function setup() {
 
     //CREATE DIALOGUEs
     createDialogueNodes();
+
+    podium = new InteractiveObjects(podiumSprite, 7, 5, podiumEvents)
     
 }
 
@@ -58,9 +73,11 @@ function mapEnabledDraw() {
     //plural!), and saying "go inside the object in that variable and find a function calld display()". So when loopTilesAndRunFunc()
     //gets to func(tilemap[x][y]), it knows that it should look inside the tile stored in tilemap at the x and y index and find and run
     //a function called display(). It will do this for every single tile before doing it again for debug() if enabled.
+    noSmooth();
     loopTilesAndRunFunc(tile => tile.display());
     player.draw()
     drawNPCs();
+    podium.display();
 
 
     //DEBUG CODE
