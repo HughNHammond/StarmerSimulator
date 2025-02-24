@@ -192,7 +192,8 @@ function drawResponse() {
 
     currentSelection = clamp(currentSelection, 0, currentNode.info.response.length - 1);
 
-    for (let x = 0; x < currentOptions.length; x++) {
+
+    for (let x = 0; x < currentNode.info.response.length; x++) {
         
         let selectionSizeY = 50;
         selectionOriginX = textOriginX - 19;
