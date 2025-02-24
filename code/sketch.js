@@ -23,6 +23,8 @@ function preload() {
     dialogueFont = loadFont("font/Pixellari.ttf")
 
     podiumSprite = loadImage("art/objects/podium.png")
+
+    backgroundTest = loadImage("art/screens/downing_street_test.png")
 }
 
 function setup() {
@@ -47,7 +49,7 @@ function setup() {
     //CREATE DIALOGUEs
     createDialogueNodes();
 
-    podium = new InteractiveObjects(podiumSprite, 7, 5, podiumEvents)
+    podium = new InteractiveObjects(podiumSprite, 5, 5, podiumEvents)
     
 }
 
@@ -74,7 +76,8 @@ function mapEnabledDraw() {
     //gets to func(tilemap[x][y]), it knows that it should look inside the tile stored in tilemap at the x and y index and find and run
     //a function called display(). It will do this for every single tile before doing it again for debug() if enabled.
     noSmooth();
-    loopTilesAndRunFunc(tile => tile.display());
+    //loopTilesAndRunFunc(tile => tile.display());
+    image(backgroundTest, 0, 0, width, height)
     player.draw()
     drawNPCs();
     podium.display();
