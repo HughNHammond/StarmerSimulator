@@ -5,6 +5,8 @@ let startFont;
 let podium;
 let podiumSprite;
 
+let downArrow;
+
 //IMAGES
 
 function preload() {
@@ -25,6 +27,8 @@ function preload() {
     podiumSprite = loadImage("art/objects/podium.png")
 
     backgroundTest = loadImage("art/screens/downing_street_test.png")
+    downArrow = loadImage("art/objects/DownArrow.png")
+    upArrow = loadImage("art/objects/UpArrow.png")
 }
 
 function setup() {

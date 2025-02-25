@@ -192,18 +192,41 @@ function drawResponse() {
 
     currentSelection = clamp(currentSelection, 0, currentNode.info.response.length - 1);
 
-
-    for (let x = 0; x < currentNode.info.response.length; x++) {
-        
+    let currentOptions = [];
         let selectionSizeY = 50;
+        let selectionSizeX = boxSizeX - tileSize*2;
+        let firstPage;
+        let displayedSelection = 0;
+   
+
+    if (currentNode.info.response.length <= 4) {
+        currentOptions = currentNode.info.response;
+        displayedSelection = currentSelection;
+        firstPage = true;
+    }
+    else {
+        if (currentSelection <= 3) {
+            currentOptions = currentNode.info.response.slice(0, 4);
+            image(downArrow, boxOriginX + boxSizeX - 60, height - 50, 50, 50);
+            displayedSelection = currentSelection;
+            firstPage = true;
+        } else {
+            currentOptions = currentNode.info.response.slice(4, currentNode.info.response.length);
+            image(upArrow, boxOriginX + boxSizeX - 60, height - boxSizeY + 60, 50, 50);
+            displayedSelection = currentSelection - 4;
+            firstPage = false;
+        }
+    }
+    
+    for (let x = 0; x < currentOptions.length; x++) {
+
         selectionOriginX = textOriginX - 19;
         selectionOriginY = textOriginY + (x * selectionSizeY) - 32;
-        selectionSizeX = boxSizeX - tileSize;
-        
         noStroke();
 
+
         //Set Selected
-        if (currentSelection === x) {
+        if (displayedSelection === x) {
             //Cursor over selection
             fill(255, 255, 255);
             rect(selectionOriginX, selectionOriginY, selectionSizeX, selectionSizeY, cornerRadius);
@@ -220,7 +243,19 @@ function drawResponse() {
         textAlign(LEFT)
         strokeWeight(0)
         stroke("black");
-        text(x + 1 + ". " + currentNode.info.response[x].r, textOriginX, textOriginY + (x * selectionSizeY))
+
+        let selectionNumber;
+
+        if (firstPage === false) {
+            selectionNumber = x + 4;
+        }
+        else {
+            selectionNumber = x;
+        }
+
+        //console.log(selectionToDisplay)
+
+        text(selectionNumber + 1 + ". " + currentOptions[x].r, textOriginX, textOriginY + (x * selectionSizeY))
     }
 }
 
@@ -348,6 +383,10 @@ function createDialogueNodes() {
                         goto: 1
                     },
                     {r: "and this is a fourht response",
+                        goto: 1
+                    },
+                    {
+                        r: "and a fifth response",
                         goto: 1
                     }
                 ]
