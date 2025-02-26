@@ -272,7 +272,7 @@ let responseEvent1 = [];
 
 let endStateEvent = [];
 
-let pressDayOne = [];
+let pressEvent1 = [];
 
 let podiumEvents = []
 
@@ -312,14 +312,14 @@ function createDialogueNodes() {
             {
                 link: null,
                 func: activateNPC,
-                param: testNPC2
+                param: reeves
             }
         )
     ]
 
     testEvent3 = [
         new DialogueNode(
-            testNPC2,
+            reeves,
             "I have nothing to say to you",
             0,
             testEvent3,
@@ -404,7 +404,7 @@ function createDialogueNodes() {
 
     endStateEvent = [ 
         new DialogueNode (
-            testNPC2,
+            reeves,
             "Would you like to end the day?",
             0,
             endStateEvent,
@@ -421,7 +421,7 @@ function createDialogueNodes() {
         ),
     
         new DialogueNode (
-            testNPC2,
+            reeves,
             "Yes, we must grow more first.",
             1,
             endStateEvent,
@@ -431,7 +431,7 @@ function createDialogueNodes() {
         ),
 
         new DialogueNode (
-            testNPC2,
+            reeves,
             "You never loved growth. You only pretened to.",
             2,
             endStateEvent,
@@ -448,12 +448,12 @@ function createDialogueNodes() {
     podiumEvents = [
         null, // to match indexes to day number
 
-        pressDayOne = [
+        pressEvent1 = [
             new DialogueNode(
                 podium,
                 "This is the opening dialogue to the podium.",
                 0,
-                pressDayOne,
+                pressEvent1,
                 {
                     link: 1,
                 }
@@ -463,7 +463,7 @@ function createDialogueNodes() {
                 podium,
                 "There should be info on your performance up there.",
                 1,
-                pressDayOne,
+                pressEvent1,
                 {
                     link: null,
                 }

@@ -8,7 +8,7 @@ class InteractiveObjects {
         this.yPos = this.tileY * tileSize;
 
         this.podiumEvents = podiumEvents
-        this.startNode = pressDayOne
+        this.startNode = pressEvent1
     }
 
     display()

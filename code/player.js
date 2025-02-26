@@ -1,4 +1,4 @@
-playerStartX = 2;
+playerStartX = 5;
 playerStartY = 2;
 
 let player = {
@@ -25,7 +25,7 @@ let player = {
 
     draw: function() {
         player.display();
-        player.displayName(); //for Debug
+        //player.displayName(); //for Debug
     },
 
     display: function() {
@@ -96,10 +96,10 @@ let player = {
             nextTileVertical = this.tileY + this.dirY;
         }
 
-        for (x = 0; x < npcs.length; x++) {
-            if (npcs[x].tileX === nextTileHorizontal && npcs[x].tileY === nextTileVertical) 
+        for (x = 0; x < activeNPCs.length; x++) {
+            if (activeNPCs[x].tileX === nextTileHorizontal && activeNPCs[x].tileY === nextTileVertical) 
             {
-                if (npcs[x].active) {
+                if (activeNPCs[x].active) {
                      return;
                 }
             }
