@@ -81,8 +81,7 @@ function displayNPCs() {
 class NPC {
     constructor(name, sprite, tileX, tileY, startNode, characterID, active) {
         this.name = name;
-        this.sprite = sprite;
-        
+        this.sprite = sprite
         
         this.startTileX = tileX;
         this.startTileY = tileY;

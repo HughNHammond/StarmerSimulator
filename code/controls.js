@@ -52,7 +52,7 @@ function keyPressed() {
 
     //IF PLAYER HAS SELECTED RESPONSE...
     else if (keyCode === controls.spacebar && gameState === respond) {
-        runFuncFromDialogue(currentNode.info.response[currentSelection]);
+        callFunctionFromDialogue(currentNode.info.response[currentSelection]);
         if (gameState != respond) return; //checks if function has changed gameState, then breaks if so (e.g. transition state triggered)
 
         //... END DIALOGUE IF NO NEXT NODE
@@ -123,17 +123,4 @@ function mousePressed() {
     // }
     
 
-}
-
-//THIS WAS CODE TO RUN A FUCNTION FROM A RESPONSE, IT CAUSED PROBLEMS WITH STATE TRANSITIONS
-
-function runFuncFromDialogue(node) {
-    if (node.func != null) {
-        if (Array.isArray(node.param)) { //checks to see if param is an array (i.e. multiple parameters)
-            node.func(...node.param); //passes each value in array as individual argument
-        }
-        else {
-            node.func(node.param);
-        }
-    }
 }

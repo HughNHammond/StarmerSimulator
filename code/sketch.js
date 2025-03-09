@@ -11,11 +11,14 @@ function preload() {
     textures[0] = loadImage("art/tiles/grassy.png")
     textures[1] = loadImage("art/tiles/stone.png")
 
-    player.sprites[0] = loadImage('art/characters/starmer/starmer_up.png');
-    player.sprites[1] = loadImage('art/characters/starmer/starmer_down.png');
-    player.sprites[2] = loadImage('art/characters/starmer/starmer_left.png');
-    player.sprites[3] = loadImage('art/characters/starmer/starmer_right.png');
-    streetingSprite = loadImage('art/characters/streeting/streeting_down.png') 
+    player.sprites = {
+        up: loadImage('art/characters/starmer/starmer_up.png'),
+        down: loadImage('art/characters/starmer/starmer_down.png'),
+        left: loadImage('art/characters/starmer/starmer_left.png'),
+        right: loadImage('art/characters/starmer/starmer_right.png'),
+    }
+
+    streetingSprite = loadImage("art/characters/streeting/streeting_down.png");
 
     startFont = loadFont("font/PressStart2P.ttf")
     startImage = loadImage("art/portraits/startImage.png")
@@ -50,7 +53,7 @@ function setup() {
     createDialogueNodes();
 
     podium = new InteractiveObjects(podiumSprite, 5, 5, podiumEvents)
-    
+
 }
 
 function draw() {

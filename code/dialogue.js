@@ -154,7 +154,7 @@ function handleNextDialogueNode() {
 
     //1. Check function
 
-    runFuncFromDialogue(currentNode.info)
+    callFunctionFromDialogue(currentNode.info)
     if (gameState != dialogue && gameState != respond) return;
 
     //2. Check if response node available
@@ -180,19 +180,27 @@ function updateDialogueNode(nextNode) {
     currentNode = nextNode;
 }
 
+//This function calls a function that is referenced in a dialogue node or is called by a response selected by the player
+function callFunctionFromDialogue(node) {
+    if (node.func != null) {
+        if (Array.isArray(node.param)) { //checks to see if param is an array (i.e. multiple parameters)
+            node.func(...node.param); //passes each value in array as individual argument
+        }
+        else {
+            node.func(node.param);
+        }
+    }
+}
+
 //--------------------------------//
 //FUNCTIONS TO HANDLE RESPONSES
 
 function drawResponse() {
-    //1. Set box values
-    //2. Run for loop
-    //3 Check where mouse is then set fill
-    //4. draw box
-    //5. Add text
 
+    //Clamps current selection so cannot exceed number of responses
     currentSelection = clamp(currentSelection, 0, currentNode.info.response.length - 1);
 
-
+    //For Loop to display response options and handle highlighted selected response
     for (let x = 0; x < currentNode.info.response.length; x++) {
         
         let selectionSizeY = 50;
@@ -223,32 +231,6 @@ function drawResponse() {
         text(x + 1 + ". " + currentNode.info.response[x].r, textOriginX, textOriginY + (x * selectionSizeY))
     }
 }
-
-// function mouseControls(x) {
-//     let mouseHover = mouseX > selectionOriginX &&
-//         mouseX < selectionOriginX + selectionSizeX &&
-//         mouseY > selectionOriginY &&
-//         mouseY < selectionOriginY + tileSize;
-
-//     // strokeWeight(1); FOR DEBUG (draws line around selectable boxes)
-//     noStroke();
-
-
-
-//     if (mouseHover) {
-//         //Cursor over selection
-//         fill(255, 255, 255);
-//         rect(selectionOriginX, selectionOriginY, selectionSizeX, tileSize, cornerRadius);
-//         fill(0, 0, 0);
-
-//         mouseHovering = currentEvent[currentNode.info.response[x].goto];
-
-//     } else {
-//         noFill();
-//         rect(selectionOriginX, selectionOriginY, selectionSizeX, tileSize, cornerRadius);
-//         fill(255, 255, 255);
-//     }
-// }
 
 function endDialogue(nextState) {
     switchState(nextState)
@@ -445,35 +427,55 @@ function createDialogueNodes() {
     ///---PODIUM NODES---///
 
 
-    podiumEvents = [
-        null, // to match indexes to day number
+    // podiumEvents = [
+    //     null, // to match indexes to day number
+
+    //     pressEvent3 = [
+    //         new DialogueNode(
+    //             podium,
+    //             "This is the opening dialogue to the podium.",
+    //             0,
+    //             pressEvent1,
+    //             {
+    //                 link: 1,
+    //             }
+    //         ),
+
+    //         new DialogueNode(
+    //             podium,
+    //             "There should be info on your performance up there.",
+    //             1,
+    //             pressEvent1,
+    //             {
+    //                 link: null,
+    //             }
+    //         )
+    //     ]
+    //  ]
 
         pressEvent1 = [
             new DialogueNode(
                 podium,
-                "This is the opening dialogue to the podium.",
+                "Prime Minster! How do you respond to allegations that you are gay?",
                 0,
                 pressEvent1,
                 {
-                    link: 1,
-                }
-            ),
-
-            new DialogueNode(
-                podium,
-                "There should be info on your performance up there.",
-                1,
-                pressEvent1,
-                {
-                    link: null,
+                    response: [
+                        {r: "I am not gay, Jeremy Corbyn is, however, very gay.",
+                            goto: 0,
+                            // func: player.modifyRating,
+                            // param: [pressRating]
+                        }
+                    ]
                 }
             )
         ]
 
 
-
-    ]
+    
 }  
+
+
 
 //DIALOGUE NODE CLASS
 class DialogueNode {

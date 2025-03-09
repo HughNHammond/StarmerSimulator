@@ -5,7 +5,7 @@ let player = {
     //Physical Properties
     name: "Keir Starmer",
     sprite: null,
-    sprites: [], //array containing all the sprites for a character
+    sprites: null, //array containing all the sprites for a character
     tileSize: tileSize,
     size: tileSize,
 
@@ -51,28 +51,28 @@ let player = {
             if (keyIsDown(controls.up)) {
                 this.dirX = 0;
                 this.dirY = -1; //direction is up!
-                this.sprite = this.sprites[0];
+                this.sprite = this.sprites.up;
             }
 
             //DOWN
             if (keyIsDown(controls.down)) {
                 this.dirX = 0;
                 this.dirY = 1; //direction is down!
-                this.sprite = this.sprites[1];
+                this.sprite = this.sprites.down;
             }
 
             //LEFT
             if (keyIsDown(controls.left)) {
                 this.dirX = -1; //direction is left!
                 this.dirY = 0; 
-                this.sprite = this.sprites[2]
+                this.sprite = this.sprites.left;
             }
 
             //RIGHT
             if (keyIsDown(controls.right)) {
                 this.dirX = 1; //direction is right!
                 this.dirY = 0;
-                this.sprite = this.sprites[3]
+                this.sprite = this.sprites.right;
             }
 
             //With the direction set, we can now move to the next code block to check if we can move!
