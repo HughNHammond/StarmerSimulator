@@ -99,6 +99,7 @@ function keyPressed() {
 
     if (keyCode === controls.f && debug) {
         flipDialogueBox = !flipDialogueBox;
+        console.log('test')
     }
 
     if (keyCode === controls.f && !debug) {
