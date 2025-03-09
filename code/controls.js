@@ -105,22 +105,3 @@ function keyPressed() {
         setTransition(startTransition)
     }
 }
-
-
-
-function mousePressed() {
-    // console.log(mouseHovering)
-    
-    // if (state === dialogue && !response && mouseHovering === null) {
-    //     handleNextDialogueNode();
-    // }
-
-    // if (mouseHovering != null) {
-    //     console.log("response")
-    //     currentNode = mouseHovering;
-    //     mouseHovering = null;
-    //     response = false;
-    // }
-    
-
-}
