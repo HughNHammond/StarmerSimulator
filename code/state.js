@@ -25,6 +25,7 @@ function handlePlayState() {
         case walk:
             player.setDirection()
             player.move();
+            player.animateSprite();
             break;
 
         default:

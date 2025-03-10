@@ -4,8 +4,12 @@ playerStartY = 2;
 let player = {
     //Physical Properties
     name: "STARMER",
-    sprite: null,
+    spriteIndex: 0,
     sprites: null, //array containing all the sprites for a character
+    spriteDirection: null,
+    animateWalk: false,
+
+
     tileSize: tileSize,
     size: tileSize,
 
@@ -29,7 +33,7 @@ let player = {
     },
 
     display: function() {
-        image(this.sprite, this.xPos, this.yPos, this.size, this.size);
+        image(this.spriteDirection[this.spriteIndex], this.xPos, this.yPos, this.size, this.size);
     },
 
     displayName: function() {
@@ -51,28 +55,28 @@ let player = {
             if (keyIsDown(controls.up)) {
                 this.dirX = 0;
                 this.dirY = -1; //direction is up!
-                this.sprite = this.sprites.up;
+                this.spriteDirection = this.sprites.up
             }
 
             //DOWN
             if (keyIsDown(controls.down)) {
                 this.dirX = 0;
                 this.dirY = 1; //direction is down!
-                this.sprite = this.sprites.down;
+                this.spriteDirection = this.sprites.down;
             }
 
             //LEFT
             if (keyIsDown(controls.left)) {
                 this.dirX = -1; //direction is left!
                 this.dirY = 0; 
-                this.sprite = this.sprites.left;
+                this.spriteDirection = this.sprites.left;
             }
 
             //RIGHT
             if (keyIsDown(controls.right)) {
                 this.dirX = 1; //direction is right!
                 this.dirY = 0;
-                this.sprite = this.sprites.right;
+                this.spriteDirection = this.sprites.right;
             }
 
             //With the direction set, we can now move to the next code block to check if we can move!
@@ -128,6 +132,9 @@ let player = {
     },
 
     move: function() {
+        let lastXPos = this.xPos;
+        let lastYPos = this.yPos;
+
         //This is in our draw loop, so called move() is called every frame BUT...
         if (this.isMoving) {
             //this code block will only activate when this.isMoving = true. Otherwise, nothing happens.
@@ -142,6 +149,31 @@ let player = {
                 this.dirX = 0;
                 this.dirY = 0;
             }
+        }
+
+        if (lastXPos != this.xPos || lastYPos != this.yPos) {
+            this.animateWalk = true;
+        }
+        else {
+            this.animateWalk = false;
+            this.spriteIndex = 0;
+        }
+
+        console.log(this.animateWalk)
+    },
+
+    animateSprite: function() {
+        if (this.animateWalk) {
+            console.log("AnimateWalk called")
+            if (count - lastCount >= timerMax) {
+                lastCount = count;
+                this.spriteIndex++;
+                console.log(this.spriteIndex)
+                if (this.spriteIndex >= this.spriteDirection.length) this.spriteIndex = 0; //this checks if this.spriteIndex is bigger than the direciotn array
+            }
+        }
+        else { //if this.animation = false, it sets our sprite back to 0.
+            this.spriteIndex = 0;
         }
     }
 }

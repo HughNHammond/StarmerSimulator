@@ -5,6 +5,10 @@ let startFont;
 let podium;
 let podiumSprite;
 
+let count = 0;
+let lastCount = 0
+let timerMax = 5;
+
 //IMAGES
 
 function preload() {
@@ -12,10 +16,10 @@ function preload() {
     textures[1] = loadImage("art/tiles/stone.png")
 
     player.sprites = {
-        up: loadImage('art/characters/starmer/starmer_up.png'),
-        down: loadImage('art/characters/starmer/starmer_down.png'),
-        left: loadImage('art/characters/starmer/starmer_left.png'),
-        right: loadImage('art/characters/starmer/starmer_right.png'),
+        up: [loadImage('art/characters/starmer/starmer_up_walk/starmer_up_walk0.png'), loadImage('art/characters/starmer/starmer_up_walk/starmer_up_walk1.png'), loadImage('art/characters/starmer/starmer_up_walk/starmer_up_walk2.png'), loadImage('art/characters/starmer/starmer_up_walk/starmer_up_walk3.png')],
+        down: [loadImage('art/characters/starmer/starmer_down_walk/starmer_down_walk0.png'), loadImage('art/characters/starmer/starmer_down_walk/starmer_down_walk1.png'), loadImage('art/characters/starmer/starmer_down_walk/starmer_down_walk2.png'), loadImage('art/characters/starmer/starmer_down_walk/starmer_down_walk3.png')],
+        left: [loadImage('art/characters/starmer/starmer_left_walk/starmer_left_walk0.png'), loadImage('art/characters/starmer/starmer_left_walk/starmer_left_walk1.png'), loadImage('art/characters/starmer/starmer_left_walk/starmer_left_walk2.png'), loadImage('art/characters/starmer/starmer_left_walk/starmer_left_walk3.png')],
+        right: [loadImage('art/characters/starmer/starmer_right_walk/starmer_right_walk0.png'), loadImage('art/characters/starmer/starmer_right_walk/starmer_right_walk1.png'),loadImage('art/characters/starmer/starmer_right_walk/starmer_right_walk2.png'),loadImage('art/characters/starmer/starmer_right_walk/starmer_right_walk3.png')],
     }
 
     streetingSprite = loadImage("art/characters/streeting/streeting_down.png");
@@ -36,7 +40,7 @@ function setup() {
     //Player Object created as object so not here
     //fullscreen(true);
 
-    player.sprite = player.sprites.down
+    player.spriteDirection = player.sprites.down;
     transitionState = waitTransition
     switchState(transition)
 
@@ -52,9 +56,7 @@ function setup() {
     //CREATE DIALOGUEs
     createDialogueNodes();
 
-    podium.yPos += 25;
-
-    //podium = new InteractiveObjects(podiumSprite, 5, 5, speechDay1)
+    podium.yPos += (tileSize/2);
 
 }
 
@@ -71,6 +73,7 @@ function draw() {
         dialogueDraw();
     }
 
+    count++;
 }
 
 function mapEnabledDraw() {
