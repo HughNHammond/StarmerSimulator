@@ -32,6 +32,8 @@ function keyPressed() {
                 case "1,0":  // NPC is to the right of the player
                 case "-1,0": // NPC is to the left of the player
                     console.log("npc found!");
+                    if (activeNPCs[npc] === podium) press = true;
+                    else press = false;
                     switchState(dialogue);
                     startDialogue(npcs[npc]);
                     break;

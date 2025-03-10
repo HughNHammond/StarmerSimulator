@@ -3,7 +3,7 @@ playerStartY = 2;
 
 let player = {
     //Physical Properties
-    name: "Keir Starmer",
+    name: "STARMER",
     sprite: null,
     sprites: null, //array containing all the sprites for a character
     tileSize: tileSize,

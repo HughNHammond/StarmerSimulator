@@ -18,14 +18,16 @@ let active = 1;
 //FUNCTIONS
 
 function createNPCs() {
-    streeting = new NPC("Wes Streeting", streetingSprite, 3, 4, responseEvent1, 0, active);
+    streeting = new NPC("WES STREETING", streetingSprite, 3, 4, responseEvent1, 0, active);
     npcs[streeting.characterID] = streeting;
 
-    reeves = new NPC("Rachel Reeves", streetingSprite, 8, 3, endStateEvent, 1, inactive)
+    reeves = new NPC("RACHEL REEVES", streetingSprite, 8, 3, endStateEvent, 1, inactive)
     npcs[reeves.characterID] = reeves;
 
-    mcsweeney = new NPC("Morgan McSweeney", streetingSprite, 6, 3, endStateEvent, 2, active)
+    mcsweeney = new NPC("MORGAN MCSWEENEY", streetingSprite, 6, 3, endStateEvent, 2, active)
     npcs[mcsweeney.characterID] = mcsweeney;
+
+    podium = new NPC("KEIR STARMER", podiumSprite, 5, 5, speechDay1, 3, active)
 
 
 

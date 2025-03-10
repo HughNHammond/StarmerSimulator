@@ -36,7 +36,7 @@ function setup() {
     //Player Object created as object so not here
     //fullscreen(true);
 
-    player.sprite = player.sprites[1]
+    player.sprite = player.sprites.down
     transitionState = waitTransition
     switchState(transition)
 
@@ -52,7 +52,9 @@ function setup() {
     //CREATE DIALOGUEs
     createDialogueNodes();
 
-    podium = new InteractiveObjects(podiumSprite, 5, 5, podiumEvents)
+    podium.yPos += 25;
+
+    //podium = new InteractiveObjects(podiumSprite, 5, 5, speechDay1)
 
 }
 
