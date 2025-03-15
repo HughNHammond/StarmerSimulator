@@ -224,7 +224,7 @@ function drawResponse() {
         }
 
         //fill(255, 255, 255) //TEMP FILL
-        textSize(25)
+        textSize(18)
         textStyle("bold")
         textAlign(LEFT)
         strokeWeight(0)

@@ -75,7 +75,7 @@ function displayNPCs() {
     for (x = 0; x < activeNPCs.length; x++) {
         if (activeNPCs[x].active)
             activeNPCs[x].display();
-            activeNPCs[x].displayName();
+            //activeNPCs[x].displayName();
     }
 }
 

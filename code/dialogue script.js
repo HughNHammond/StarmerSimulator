@@ -32,7 +32,112 @@ function createDialogueNodes() {
         new DialogueNode(
             player,
             "Our economy is broken. Changes were promsied, but never delivered. The contract between the people and government broken time and time again.",
-            0,
+            1,
+            speechDay1,
+            {
+                link: 2
+            }
+        ),
+
+        new DialogueNode(
+            player,
+            "The Labour Party were elected because we promised change, and that is exactly what we will do: change Britain.",
+            2,
+            speechDay1,
+            {
+                response: [
+                    {
+                        r: "Talk about balancing the budget.",
+                        goto:3,
+                        italics: true
+                    },
+                ]
+            }
+        ),
+
+        new DialogueNode(
+            player,
+            "The British economy has stagnated, and it is working people who are suffering. To grow, everyone must step up to the plate.",
+            3,
+            speechDay1,
+            {
+                link: 4
+            }
+        ),
+
+        new DialogueNode(
+            player,
+            "Whenever the Conversatives announced cuts, I urged them to go further, and that's exactly what we will do. We need to force people to get back to work.",
+            4,
+            speechDay1,
+            {
+                link: 5
+            }
+        ),
+
+        new DialogueNode(
+            player,
+            "Nothing has encouraged more laziness than our welfare system, particularly on Disability Benefits. That's why today I'm announcing our 'Get Up, Get Out' bill.",
+            5,
+            speechDay1,
+            {
+                link: 6
+            }
+        ),
+
+        new DialogueNode(
+            player,
+            "I am announcing reform of the Disability Benefits, saving up to £7 billion each year, but I am not simply pocketing that money, I will use it to encourage disabled people back to work.",
+            6,
+            speechDay1,
+            {
+                link: 7
+            }
+        ),
+
+        new DialogueNode(
+            player,
+            "The British Government has made a deal with Amazon warehouses for those seeking Disability Benefits to instead be offered a place on Amazon's new physiotherpay program.",
+            7,
+            speechDay1,
+            {
+                link: 8
+            }
+        ),
+
+        new DialogueNode(
+            player,
+            "This program allows those out of work to get back into the workforce while undertaking a robust exercise regime that provides an intense all body workout.",
+            8,
+            speechDay1,
+            {
+                link: 9
+            }
+        ),
+
+        new DialogueNode(
+            player,
+            "Participants will stretch key muscle groups by picking up deliveries, gain muscle mass walking around the warehouse at break-neck speeds - oof, sorry, I thought we cut that line.",
+            9,
+            speechDay1,
+            {
+                link: 10
+            }
+        ),
+
+        new DialogueNode(
+            player,
+            "And, uh, oh yes – and develop their fine motor skills by aiming their urine into a bottle instead of wasting time on loo breaks.",
+            10,
+            speechDay1,
+            {
+                link: 11
+            }
+        ),
+        new DialogueNode(
+            player,
+            "This program will only cost the British taxpayer £14 billion, and will grow our economy by bolstering and strengthening our workforce.",
+            11,
             speechDay1,
             {
                 link: null

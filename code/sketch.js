@@ -7,7 +7,7 @@ let podiumSprite;
 
 let count = 0;
 let lastCount = 0
-let timerMax = 5;
+let timerMax = 6;
 
 //IMAGES
 
