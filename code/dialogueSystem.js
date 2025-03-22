@@ -25,16 +25,15 @@ function createDialogueEvents() {
 
         OPTIONAL
         GoTo: Set to the label of the node you wish to jump to.
-        func: write the name of any function you want to call
-        param: write '() =>' then the parameters for any function. NOTE: if more than one parameter, store as array.
-                the reason to use '() =>' is it turns param into a function that returns the values when called at runtime, this means that we can link
-                to nodes that are created further down the runtime as the parameters are only set when node.param is called in my code.
+        func: write '() =>' then the name of the function + any parameters in brackets. '() =>' delays calling the function 
+        until node.func() is called in my script (under updateDialogue!)
     */
+
     exampleEvent = [
         {label: "intro1", speaker: "Starmer", dialogue: "Hello, this is  my intro Dialogue"},
-        {label: "intro2", speaker: "Starmer", dialogue: "Here is some more dialogue", goTo: "intro4", func: activateNPC, param: () => reeves},
+        {label: "intro2", speaker: "Starmer", dialogue: "Here is some more dialogue", goTo: "intro4", func: () => activateNPC(reeves)},
         {label: "intro3", speaker: "Starmer", dialogue: "This dialogue should be skipped"},
-        {label: "intro4", speaker: "Starmer", dialogue: "I skipped a node", func: setStartNode, param: () => [streeting, anotherEvent]}
+        {label: "intro4", speaker: "Starmer", dialogue: "I skipped a node", func: () => setStartNode(streeting, anotherEvent)}
     ]
 
     anotherEvent = [
@@ -44,12 +43,9 @@ function createDialogueEvents() {
 
 //HANDLE DIALOGUE NODES – Called when player clicks to change current dialogue
 function updateDialogue() {
-    console.log(currentEvent)
-    console.log(currentIndex)
-    console.log(currentNode);
     //Checks if dialogue has function inside it
     if (currentNode.func != undefined) {
-        callFunctionFromDialogue(currentNode);
+        currentNode.func();
     }
     
     //GO TO NEXT DIALOGUE IF NO GOTO INSTRUCTIONS
@@ -64,10 +60,6 @@ function updateDialogue() {
         currentNode = currentEvent.find((node) => node.label === currentNode.goTo);
         currentIndex = currentEvent.indexOf(currentNode);
     }
-
-    console.log(currentEvent)
-    console.log(currentIndex)
-    console.log(currentNode);
 }
 
 function startDialogue(npc) {
@@ -79,18 +71,6 @@ function startDialogue(npc) {
 
 function endDialogue(nextState) {
     switchState(nextState)
-}
-
-function callFunctionFromDialogue(node) {
-    let param = node.param(); //parameters now are defined as functions that return the parameters. 
-    if (node.func != undefined) {
-        if (Array.isArray(param)) { //checks to see if param is an array (i.e. multiple parameters)
-            node.func(...param); //passes each value in array as individual argument
-        }
-        else {
-            node.func(param);
-        }
-    }
 }
 
 //DRAWING DIALOGUE BOX
