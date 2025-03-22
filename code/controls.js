@@ -49,7 +49,7 @@ function keyPressed() {
 
     //IF PLAYER IN DIALOGUE AND NO RESPONSE, MOVE TO NEXT NODE (OR END)
     else if (keyCode === controls.spacebar && gameState === dialogue) {
-        handleNextDialogueNode(); //checks whether to end Dialogue or move to next Node
+        updateDialogue(); //checks whether to end Dialogue or move to next Node
     } 
 
     //IF PLAYER HAS SELECTED RESPONSE...

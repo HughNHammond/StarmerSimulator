@@ -50,11 +50,13 @@ function setup() {
 
 
     //CREATE NPCs
-    createNPCs();
+    createNPCs(); // intialises NPC objects
+    createDialogueEvents(); // creates Dialogue Nodes
+    attachStartNodesToNPCs(); // attaches starting dialogue nodes to each NPC
 
 
     //CREATE DIALOGUEs
-    createDialogueNodes();
+   // createDialogueNodes();
 
     podium.yPos += (tileSize/2);
 
@@ -74,6 +76,11 @@ function draw() {
     }
 
     count++;
+
+    // if (keyIsDown(85)) {// b
+    //     drawDialogueBox();
+    // }
+
 }
 
 function mapEnabledDraw() {
