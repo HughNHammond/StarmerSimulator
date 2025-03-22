@@ -21,16 +21,22 @@ let anotherEvent = [];
 function createDialogueEvents() {
 
     /*  NOTE ON HOW DIALOGUE EVENTS WORK
-        All nodes need a LABEL, a SPEAKER, and a DIALOGUE value.
+        Each Dialogue Event is an Array containing several NODES. Each node is an object.
 
-        OPTIONAL
-        GoTo: Set to the label of the node you wish to jump to.
+        REUQIRED PROPERTIES
+        label: a string containing a label/name for the node
+        speaker: a string with the name of the NPC stating the dialogue
+        dialogue: a string containing the dialogue for that node
+
+        OPTIONAL PROPERTIES
+        GoTo: A string that matches the label of the node to be displayed next
         func: write '() =>' then the name of the function + any parameters in brackets. '() =>' delays calling the function 
-        until node.func() is called in my script (under updateDialogue!)
+        until node.func() is called in my script (under updateDialogue!). If i just wrote e.g. 'func: activateNPC(reeves)' then
+        it would be called when the code starts and the object is created, not when called in my script.
     */
 
     exampleEvent = [
-        {label: "intro1", speaker: "Starmer", dialogue: "Hello, this is  my intro Dialogue"},
+        {label: "intro1", speaker: player.name, dialogue: "Hello, this is  my intro Dialogue"},
         {label: "intro2", speaker: "Starmer", dialogue: "Here is some more dialogue", goTo: "intro4", func: () => activateNPC(reeves)},
         {label: "intro3", speaker: "Starmer", dialogue: "This dialogue should be skipped"},
         {label: "intro4", speaker: "Starmer", dialogue: "I skipped a node", func: () => setStartNode(streeting, anotherEvent)}
