@@ -14,9 +14,12 @@ Each dialogue event will be a
 let currentEvent;
 let currentNode;
 let currentIndex;
+let currentSelection = 0;
 
 let exampleEvent = [];
 let anotherEvent = [];
+let exampleResponse = [];
+let end = "end";
 
 function createDialogueEvents() {
 
@@ -42,29 +45,84 @@ function createDialogueEvents() {
         {label: "intro4", speaker: "Starmer", dialogue: "I skipped a node", func: () => setStartNode(streeting, anotherEvent)}
     ]
 
+    exampleResponse = [
+        {label: "respond1", speaker: mcsweeney.name, dialogue: "You can choose some options now.", 
+            response: [
+                {r: "Here is one response.", goTo: "respond2"},
+                {r: "This is a second response.", goTo: "respond3"}
+            ]
+        },
+        {label: "respond2", speaker: mcsweeney.name, dialogue: "You picked the first option.", goTo: end},
+        {label: "respond3", speaker: mcsweeney.name, dialogue: "You picked the second option.", goTo: end}
+    ]
+
     anotherEvent = [
         {label: "anotherEvent", speaker: "Streeting", dialogue: "Let's test if I can say this now!"}
     ]
 }
 
+
+//-----------------------UPDATE DIALOGUE FUNCTIONS-----------------------------//
+
 //HANDLE DIALOGUE NODES – Called when player clicks to change current dialogue
 function updateDialogue() {
+
+    if (gameState === dialogue) {
+        updateFromDialogueNode();
+    }
+    
+    else if (gameState === respond) {
+        updateFromResponseNode();
+    }
+
+}
+
+function updateFromDialogueNode() {
+
     //Checks if dialogue has function inside it
     if (currentNode.func != undefined) {
         currentNode.func();
     }
-    
+
+    if (currentNode.response != undefined) {
+        currentSelection = 0;
+        switchState(respond);
+        return;
+    }
+    else if (gameState != dialogue) {
+        switchState(dialogue);
+        return;
+    }
+
     //GO TO NEXT DIALOGUE IF NO GOTO INSTRUCTIONS
-    if (currentNode.goTo === undefined) { 
-        if (currentIndex >= currentEvent.length - 1) {
-            endDialogue(walk)
+    if (currentNode.goTo === undefined || currentNode.goTo === end) {
+        if (currentIndex >= currentEvent.length - 1 || currentNode.goTo === end) {
+            endDialogue(walk);
         } else {
             currentIndex++;
             currentNode = currentEvent[currentIndex];
         }
-    } else {
+    }
+    else {
         currentNode = currentEvent.find((node) => node.label === currentNode.goTo);
         currentIndex = currentEvent.indexOf(currentNode);
+    }
+}
+
+function updateFromResponseNode() {
+    if (currentNode.response[currentSelection].func != undefined) { currentNode.response[currentSelection].func(); };
+
+    //... END DIALOGUE IF NO NEXT NODE
+    if (currentNode.response[currentSelection].goTo === undefined) {
+        switchState(walk);
+        return;
+    }
+
+    //... OR MOVE TO NEXT NODE
+    else {
+        currentNode = currentEvent.find((node) => node.label === currentNode.response[currentSelection].goTo);
+        currentIndex = currentEvent.indexOf(currentNode);
+        switchState(dialogue);
     }
 }
 
@@ -78,6 +136,9 @@ function startDialogue(npc) {
 function endDialogue(nextState) {
     switchState(nextState)
 }
+
+
+//--------------------------------------DRAWING BOX/TEXT---------------------------------------//
 
 //DRAWING DIALOGUE BOX
 function drawDialogueBox() {
@@ -107,23 +168,72 @@ function drawDialogueBox() {
         textOriginY = boxOriginY + boxTextPadding - 18;
     }
 
-    //DRAW BOX
+
     stroke(5, 93, 169); //labour blue
     strokeWeight(10);
     fill(228, 0, 59); //labour red
-    
-    rect(boxOriginX, boxOriginY, boxSizeX, boxSizeY, cornerRadius)
-    
+
+    rect(boxOriginX, boxOriginY, boxSizeX, boxSizeY, cornerRadius);
+
+    if (gameState === dialogue) {
+        drawDialogueText(boxOriginX, boxOriginY, boxSizeX, boxSizeY, cornerRadius, textOriginX, textOriginY, boxTextPadding);
+    }
+    else if (gameState === respond) {
+        drawResponseText(boxSizeX, textOriginX, textOriginY, cornerRadius)
+    }
+
+}
+
+function drawDialogueText(boxOriginX, boxOriginY, boxSizeX, boxSizeY, cornerRadius, textOriginX, textOriginY, boxTextPadding) {
+
+
     //DRAW TEXT
-    textSize(25)
-    strokeWeight(0)
+    textSize(25);
+    strokeWeight(0);
     stroke(255, 131, 131);
-    fill(255,255,255);
-    textAlign(LEFT)
-    textStyle("bold")
-    text(currentNode.speaker, textOriginX, textOriginY, boxSizeX - (boxTextPadding*1.5), boxSizeY - boxTextPadding)
-    textStyle("normal")
-    text(currentNode.dialogue, textOriginX, textOriginY + 40, boxSizeX - (boxTextPadding*1.5), boxSizeY - boxTextPadding);
+    fill(255, 255, 255);
+    textAlign(LEFT);
+    textStyle("bold");
+    text(currentNode.speaker, textOriginX, textOriginY, boxSizeX - (boxTextPadding * 1.5), boxSizeY - boxTextPadding);
+    textStyle("normal");
+    text(currentNode.dialogue, textOriginX, textOriginY + 40, boxSizeX - (boxTextPadding * 1.5), boxSizeY - boxTextPadding);
+}
+
+function drawResponseText(boxSizeX, textOriginX, textOriginY, cornerRadius) {
+
+    //Clamps current selection so cannot exceed number of responses
+    currentSelection = clamp(currentSelection, 0, currentNode.response.length - 1);
+
+    //For Loop to display response options and handle highlighted selected response
+    for (let x = 0; x < currentNode.response.length; x++) {
+        
+        let selectionSizeY = 50;
+        let selectionOriginX = textOriginX - 19;
+        let selectionOriginY = textOriginY + (x * selectionSizeY) - 32;
+        let selectionSizeX = boxSizeX - tileSize;
+        
+        noStroke();
+
+        //Set Selected
+        if (currentSelection === x) {
+            //Cursor over selection
+            fill(255, 255, 255);
+            rect(selectionOriginX, selectionOriginY, selectionSizeX, selectionSizeY, cornerRadius);
+            fill(0, 0, 0);
+        } else {
+            noFill();
+            rect(selectionOriginX, selectionOriginY, selectionSizeX, selectionSizeY, cornerRadius);
+            fill(255, 255, 255);
+        }
+
+        //fill(255, 255, 255) //TEMP FILL
+        textSize(20)
+        textStyle("bold")
+        textAlign(LEFT)
+        strokeWeight(0)
+        stroke("black");
+        text(x + 1 + ". " + currentNode.response[x].r, textOriginX, textOriginY + (x * selectionSizeY))
+    }
 }
 
 //Draw Loop

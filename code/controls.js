@@ -31,11 +31,11 @@ function keyPressed() {
                 case "0,1":  // NPC is below the player
                 case "1,0":  // NPC is to the right of the player
                 case "-1,0": // NPC is to the left of the player
-                    console.log("npc found!");
+                    console.log(npcs[npc]);
                     if (activeNPCs[npc] === podium) press = true;
                     else press = false;
                     switchState(dialogue);
-                    startDialogue(npcs[npc]);
+                    startDialogue(activeNPCs[npc]);
                     break;
             }
         }
@@ -48,24 +48,13 @@ function keyPressed() {
     } 
 
     //IF PLAYER IN DIALOGUE AND NO RESPONSE, MOVE TO NEXT NODE (OR END)
-    else if (keyCode === controls.spacebar && gameState === dialogue) {
+    else if (keyCode === controls.spacebar && (gameState === dialogue || gameState === respond)) {
         updateDialogue(); //checks whether to end Dialogue or move to next Node
     } 
 
     //IF PLAYER HAS SELECTED RESPONSE...
     else if (keyCode === controls.spacebar && gameState === respond) {
-        callFunctionFromDialogue(currentNode.info.response[currentSelection]);
-        if (gameState != respond) return; //checks if function has changed gameState, then breaks if so (e.g. transition state triggered)
 
-        //... END DIALOGUE IF NO NEXT NODE
-        if (currentNode.info.response[currentSelection].goto === null) {
-            switchState(walk)
-        }
-        //... OR MOVE TO NEXT NODE
-        else{
-            currentNode = currentEvent[currentNode.info.response[currentSelection].goto];
-            switchState(dialogue)
-        } 
     }
 
     //IF IN TRANSITION STATE
