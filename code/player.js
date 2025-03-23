@@ -50,6 +50,12 @@ let player = {
         text(this.name, this.xPos + tileSize/2, this.yPos - 2);
     },
 
+    handleRatingChange: function(pressMin, pressMax) {
+        let pressChange = Math.round(random(pressMin, pressMax + 1));
+
+        pressRating += pressChange;
+    },
+    
     setDirection: function() {
         //Check if we're NOT currently moving...
         if (!this.isMoving) {
