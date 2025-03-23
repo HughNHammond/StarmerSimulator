@@ -12,6 +12,9 @@ let lastCount = 0
 let timerMax = 6;
 
 //IMAGES
+let backgroundImage;
+let interiorImage;
+let exteriorImage;
 
 function preload() {
     textures[0] = loadImage("art/tiles/grassy.png")
@@ -33,10 +36,12 @@ function preload() {
     startImage = loadImage("art/portraits/startImage.png")
 
     dialogueFont = loadFont("font/Pixellari.ttf")
-
     podiumSprite = loadImage("art/objects/podium.png")
 
-    backgroundTest = loadImage("art/screens/Downing Street Interior.png")
+    interiorImage = loadImage("art/screens/Downing Street Interior.png");
+    interior.backgroundImage = interiorImage;
+    exteriorImage = loadImage("art/screens/Downing Street Exterior.png");
+    exterior.backgroundImage = exteriorImage;
 }
 
 function setup() {
@@ -51,13 +56,15 @@ function setup() {
 
     createCanvas(tilesX*tileSize, tilesY*tileSize)
 
-    createTileMap(); //Creates the TileMap (in tilemap.js)
-
 
     //CREATE NPCs
     createNPCs(); // intialises NPC objects
     createDialogueEvents(); // creates Dialogue Nodes
     attachStartNodesToNPCs(); // attaches starting dialogue nodes to each NPC
+
+    loadLevel(interior)
+    player.xPos = playerStartX * tileSize;
+    player.yPos = playerStartY * tileSize;
 
     podium.yPos += (tileSize/2);
 
@@ -93,10 +100,10 @@ function mapEnabledDraw() {
     //a function called display(). It will do this for every single tile before doing it again for debug() if enabled.
     noSmooth();
     //loopTilesAndRunFunc(tile => tile.display());
-    image(backgroundTest, 0, 0, width, height)
+    image(backgroundImage, 0, 0, width, height)
     player.draw()
     drawNPCs();
-    podium.display();
+   //podium.display();
 
 
     //DEBUG CODE

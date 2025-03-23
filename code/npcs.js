@@ -18,16 +18,17 @@ let active = 1;
 //FUNCTIONS
 
 function createNPCs() {
-    streeting = new NPC("WES STREETING", streetingSprite, 3, 4, null, 0, active);
+    streeting = new NPC("WES STREETING", streetingSprite, 3, 4, 0, active);
     npcs[streeting.characterID] = streeting;
 
-    reeves = new NPC("RACHEL REEVES", streetingSprite, 8, 3, null, 1, inactive)
+    reeves = new NPC("RACHEL REEVES", streetingSprite, 8, 3, 1, inactive)
     npcs[reeves.characterID] = reeves;
 
-    mcsweeney = new NPC("MORGAN MCSWEENEY", streetingSprite, 6, 8, null, 2, active)
+    mcsweeney = new NPC("MORGAN MCSWEENEY", streetingSprite, 6, 8, 2, active)
     npcs[mcsweeney.characterID] = mcsweeney;
 
-    podium = new NPC("KEIR STARMER", podiumSprite, 5, 5, null, 3, active)
+    podium = new NPC("KEIR STARMER", podiumSprite, 5, 5, 3, active)
+    npcs[podium.characterID] = podium;
 
 
 
@@ -46,9 +47,9 @@ function createNPCs() {
     // npcs[reporter4.characterID] = reporter4;
 
 
-    for (let npc in npcs) {
-        if (npcs[npc].active) {activeNPCs.push(npcs[npc]);}
-    }
+    // for (let npc in npcs) {
+    //     if (npcs[npc].active) {activeNPCs.push(npcs[npc]);}
+    // }
 }
 
 function attachStartNodesToNPCs() {
@@ -65,7 +66,7 @@ function activateNPC(npc) {
 
 function deactivateNPC(npc) {
     npc.active = inactive;
-    activeNPCs.pop(npc);
+    activeNPCs.slice(npc, 1);
 }
 
 function drawNPCs() {
@@ -94,7 +95,7 @@ function setStartNode(npc, event) {
 
 
 class NPC {
-    constructor(name, sprite, tileX, tileY, startNode, characterID, active) {
+    constructor(name, sprite, tileX, tileY, characterID, active) {
         this.name = name;
         this.sprite = sprite
         
@@ -108,8 +109,8 @@ class NPC {
         this.size = tileSize;
         this.characterID = characterID;
 
-        this.startNode = startNode; //What dialogue they will start when dialogue is started
-        this.currentNode = startNode;
+        this.startNode; //What dialogue they will start when dialogue is started
+        this.currentNode;
 
 
         this.active = active;

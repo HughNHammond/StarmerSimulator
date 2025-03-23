@@ -27,20 +27,71 @@ let tileRules = [
     [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //3
     [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //4
     [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //5
-    [0,  0,  0,  0,  0,  1,  0,  0,  0,  0,  0], //6
+    [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //6
     [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //7
     [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //8
-    ]
+]
 
-function createTileMap() {
+let interior = {
+    tileRules: [
+        //   0  1  2  3  4  5  6  7  8  9  10  
+            [1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1], //0
+            [1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1], //1
+            [1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1], //2
+            [1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1], //3
+            [1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1], //4
+            [1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1], //5
+            [1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1], //6
+            [1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1], //7
+            [1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1], //8
+        ],
+    backgroundImage: null,
+    activeNPCs: () => [reeves, mcsweeney, streeting],
+    startX: 5,
+    startY: 8,
+    nextLevel: 1
+}
+
+let exterior = {
+    tileRules: [
+        //   0   1   2   3   4   5   6   7   8   9   10  
+            [1,  1,  1,  1,  1,  2,  1,  1,  1,  1,  1], //0
+            [1,  1,  1,  1,  1,  0,  1,  1,  1,  1,  1], //1
+            [1,  1,  1,  1,  1,  0,  1,  1,  1,  1,  1], //2
+            [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //3
+            [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //4
+            [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //5
+            [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //6
+            [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //7
+            [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //8
+        ],
+    
+    backgroundImage: null,
+    activeNPCs: () => [podium],
+    startX: 5,
+    startY: 1,
+    nextLevel: 0
+}
+
+let currentLevel;
+let levels = [interior, exterior]
+
+function loadLevel(level) {
+    currentLevel = level;
+    tileRules = level.tileRules;
+    activeNPCs = level.activeNPCs();
+    player.xPos = level.startX * tileSize;
+    player.yPos = level.startY * tileSize;
+    backgroundImage = level.backgroundImage;
     for (let x = 0; x < tilesX; x++) {
         tilemap[x] = [];
         for (let y = 0; y < tilesY; y++) {
-            tilemap[x][y] = new Tile(textures[spriteMap[y][x]], x, y, tileSize, tileID, tileRules[y][x])
+            tilemap[x][y] = new Tile(x, y, tileSize, tileID, tileRules[y][x])
             tileID++;
         }
     }
 }
+
 
 function loopTilesAndRunFunc(func) {
     //SEE NOTES ON SKETCH UNDER DRAW()
@@ -52,8 +103,7 @@ function loopTilesAndRunFunc(func) {
 }
 
 class Tile{
-    constructor(texture, tileX, tileY, tileSize, tileID, tileRules) {
-        this.texture = texture;
+    constructor(tileX, tileY, tileSize, tileID, tileRules) {
         this.tileX = tileX;
         this.tileY = tileY;
         this.tileSize = tileSize;
@@ -65,10 +115,12 @@ class Tile{
     }
 
     display() {
-        image(this.texture, this.xPos, this.yPos, this.tileSize, this.tileSize)
+        image(this.xPos, this.yPos, this.tileSize, this.tileSize)
     }
 
     debug() {
+
+        textAlign(CENTER)
 
         strokeWeight(1)
 
@@ -76,13 +128,13 @@ class Tile{
 
         fill("yellow")
         textSize(8)
-        text("X: " + this.tileX + ", Y: " + this.tileY, this.xPos + 2, this.yPos + 8) // +2 and +8 adds text padding to render text in right box
+        text("X: " + this.tileX + ", Y: " + this.tileY, this.xPos + 20, this.yPos + 8) // +2 and +8 adds text padding to render text in right box
 
         textSize(10)
-        text("ID: " + this.tileID, this.xPos + 2, this.yPos + 18)
+        text("ID: " + this.tileID, this.xPos + 20, this.yPos + 18)
 
         noFill();
-        stroke('black');
+        stroke('yellow');
         rect(this.xPos, this.yPos, this.tileSize, this.tileSize);
     }
 }

@@ -161,7 +161,7 @@ let player = {
             nextTileVertical < tilesY //right edge of map
         ) {
             //if it is in bounds, have we set it as moveable in our ruleMap:
-            if (tileRules[nextTileVertical][nextTileHorizontal] != 1) { // remember we have to swap these!
+            if (tileRules[nextTileVertical][nextTileHorizontal] === 0) { // remember we have to swap these!
                 //if the target tile is walkable, then...
                 //...calculate the precise x and y coordinate of the target tile...
                 this.tx = nextTileHorizontal * this.tileSize;
@@ -169,6 +169,9 @@ let player = {
                 
                 //Because the player is ready to move there, we can set isMoving to true!
                 this.isMoving = true;
+            } 
+            else if (tileRules[nextTileVertical][nextTileHorizontal] === 2) {
+                loadLevel(levels[currentLevel.nextLevel])
             }
         }
     },
@@ -186,6 +189,7 @@ let player = {
 
             //Now check if player has reached targetX
             if (this.xPos === this.tx && this.yPos === this.ty) {
+
                 //if there, stop moving and reset our variables
                 this.isMoving = false;
                 this.dirX = 0;
