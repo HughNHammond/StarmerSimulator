@@ -77,12 +77,10 @@ function updateDialogue() {
 
 }
 
-function updateFromDialogueNode() {
-
+function updateFromDialogueNode() { //Checks if node has any code to run and checks what node to load next
     //Checks if dialogue has function inside it
-    if (currentNode.func != undefined) {
-        currentNode.func();
-    }
+    if (currentNode.func != undefined) currentNode.func();
+    
 
     if (currentNode.response != undefined) {
         currentSelection = 0;
@@ -212,6 +210,22 @@ function drawResponseText(boxSizeX, textOriginX, textOriginY, cornerRadius) {
         let selectionOriginY = textOriginY + (x * selectionSizeY) - 32;
         let selectionSizeX = boxSizeX - tileSize;
         
+        let displayedResponses;
+        let cursorPosition;
+
+        if (currentNode.response.length <= 4) {
+            displayedResponses = currentNode.response;
+            cursorPosition = currentSelection;
+        }
+        else {
+            if (currentSeleciton <= 4) {
+                displayedResponses = currentNode.response.slice(0, 5);
+                image(downArrow, boxOriginX + boxSizeX - 60, height - 50, 50, 50);
+
+            }
+        }
+
+
         noStroke();
 
         //Set Selected
