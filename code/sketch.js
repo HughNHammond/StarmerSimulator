@@ -4,6 +4,8 @@ let startFont;
 
 let podium;
 let podiumSprite;
+let downArrow;
+let upArrow;
 
 let count = 0;
 let lastCount = 0
@@ -21,6 +23,9 @@ function preload() {
         left: [loadImage('art/characters/starmer/starmer_left_walk/starmer_left_walk0.png'), loadImage('art/characters/starmer/starmer_left_walk/starmer_left_walk1.png'), loadImage('art/characters/starmer/starmer_left_walk/starmer_left_walk2.png'), loadImage('art/characters/starmer/starmer_left_walk/starmer_left_walk3.png')],
         right: [loadImage('art/characters/starmer/starmer_right_walk/starmer_right_walk0.png'), loadImage('art/characters/starmer/starmer_right_walk/starmer_right_walk1.png'),loadImage('art/characters/starmer/starmer_right_walk/starmer_right_walk2.png'),loadImage('art/characters/starmer/starmer_right_walk/starmer_right_walk3.png')],
     }
+
+    downArrow = loadImage("art/objects/DownArrow.png");
+    upArrow = loadImage("art/objects/UpArrow.png");
 
     streetingSprite = loadImage("art/characters/streeting/streeting_down.png");
 

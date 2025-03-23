@@ -39,17 +39,26 @@ function createDialogueEvents() {
     */
 
     exampleEvent = [
-        {label: "intro1", speaker: player.name, dialogue: "Hello, this is  my intro Dialogue"},
-        {label: "intro2", speaker: "Starmer", dialogue: "Here is some more dialogue", goTo: "intro4", func: () => activateNPC(reeves)},
-        {label: "intro3", speaker: "Starmer", dialogue: "This dialogue should be skipped"},
-        {label: "intro4", speaker: "Starmer", dialogue: "I skipped a node", func: () => setStartNode(streeting, anotherEvent)}
+        {label: "intro1", speaker: streeting.name, dialogue: "Hello, this is  my intro Dialogue"},
+        {label: "intro2", speaker: streeting.name, dialogue: "Here is some more dialogue", goTo: "intro4", func: () => activateNPC(reeves)},
+        {label: "intro3", speaker: streeting.name, dialogue: "This dialogue should be skipped"},
+        {label: "intro4", speaker: streeting.name, dialogue: "I skipped a node. Would you like me to say something else?",
+            response: [
+                {r: "God no, shuttup Wesley.", goTo: end},
+                {r: "Yes please, I hate myself.", goTo: "intro5", func: () => setStartNode(streeting, anotherEvent)}
+            ]
+        },
+        {label: "intro5", speaker: streeting.name, dialogue: "If you talk to me again, I'll say something new!", goTo: end}
     ]
 
     exampleResponse = [
         {label: "respond1", speaker: mcsweeney.name, dialogue: "You can choose some options now.", 
             response: [
                 {r: "Here is one response.", goTo: "respond2"},
-                {r: "This is a second response.", goTo: "respond3"}
+                {r: "This is a second response.", goTo: "respond3"},
+                {r: "This ends dialogue.", goTo: end},
+                {r: "This is the first response again.", goTo: "respond2"},
+                {r: "This is the second response again", goTo: "respond3"}
             ]
         },
         {label: "respond2", speaker: mcsweeney.name, dialogue: "You picked the first option.", goTo: end},
@@ -174,16 +183,15 @@ function drawDialogueBox() {
     rect(boxOriginX, boxOriginY, boxSizeX, boxSizeY, cornerRadius);
 
     if (gameState === dialogue) {
-        drawDialogueText(boxOriginX, boxOriginY, boxSizeX, boxSizeY, cornerRadius, textOriginX, textOriginY, boxTextPadding);
+        drawDialogueText(boxSizeX, boxSizeY, textOriginX, textOriginY, boxTextPadding);
     }
     else if (gameState === respond) {
-        drawResponseText(boxSizeX, textOriginX, textOriginY, cornerRadius)
+        drawResponseText(boxOriginX,  boxSizeX, boxSizeY, textOriginX, textOriginY, cornerRadius)
     }
 
 }
 
-function drawDialogueText(boxOriginX, boxOriginY, boxSizeX, boxSizeY, cornerRadius, textOriginX, textOriginY, boxTextPadding) {
-
+function drawDialogueText(boxSizeX, boxSizeY, textOriginX, textOriginY, boxTextPadding) {
 
     //DRAW TEXT
     textSize(25);
@@ -197,44 +205,52 @@ function drawDialogueText(boxOriginX, boxOriginY, boxSizeX, boxSizeY, cornerRadi
     text(currentNode.dialogue, textOriginX, textOriginY + 40, boxSizeX - (boxTextPadding * 1.5), boxSizeY - boxTextPadding);
 }
 
-function drawResponseText(boxSizeX, textOriginX, textOriginY, cornerRadius) {
+function drawResponseText(boxOriginX, boxSizeX, boxSizeY, textOriginX, textOriginY, cornerRadius) {
 
     //Clamps current selection so cannot exceed number of responses
     currentSelection = clamp(currentSelection, 0, currentNode.response.length - 1);
 
-    //For Loop to display response options and handle highlighted selected response
-    for (let x = 0; x < currentNode.response.length; x++) {
-        
+    //Checks how many options there are. If more than 4, it splits them into two arrays.
+    let options = []; 
+    if (currentNode.response.length <= 4) {
+        options = [currentNode.response];
+    }
+    else {
+        options = [currentNode.response.slice(0,4), currentNode.response.slice(4)];
+    }
+
+    //Checks what option is currently selected and determines which page of options should be rendered on screen
+    let cursorPosition;
+    let page;
+    if (currentSelection <= 3) {
+        page = 0;
+        cursorPosition = currentSelection;
+        if (options.length > 1) {
+            image(downArrow, boxOriginX + boxSizeX - 60, height - 50, 50, 50);
+        }
+    }
+    else {
+        page = 1;
+        cursorPosition = currentSelection - 4;
+        image(upArrow, boxOriginX + boxSizeX - 60, height - boxSizeY + 60, 50, 50);
+    }
+
+    //Runs a for loop to draw the text on screen for each option and highlight the relevant option
+    for (let x = 0; x < options[page].length; x++) {
         let selectionSizeY = 50;
         let selectionOriginX = textOriginX - 19;
         let selectionOriginY = textOriginY + (x * selectionSizeY) - 32;
-        let selectionSizeX = boxSizeX - tileSize;
+        let selectionSizeX = boxSizeX - (tileSize*1.5);
         
-        let displayedResponses;
-        let cursorPosition;
-
-        if (currentNode.response.length <= 4) {
-            displayedResponses = currentNode.response;
-            cursorPosition = currentSelection;
-        }
-        else {
-            if (currentSeleciton <= 4) {
-                displayedResponses = currentNode.response.slice(0, 5);
-                image(downArrow, boxOriginX + boxSizeX - 60, height - 50, 50, 50);
-
-            }
-        }
-
-
         noStroke();
 
-        //Set Selected
-        if (currentSelection === x) {
-            //Cursor over selection
+        if (cursorPosition === x) {
+            //For selected option
             fill(255, 255, 255);
             rect(selectionOriginX, selectionOriginY, selectionSizeX, selectionSizeY, cornerRadius);
             fill(0, 0, 0);
         } else {
+            //For non-selected options
             noFill();
             rect(selectionOriginX, selectionOriginY, selectionSizeX, selectionSizeY, cornerRadius);
             fill(255, 255, 255);
@@ -246,9 +262,12 @@ function drawResponseText(boxSizeX, textOriginX, textOriginY, cornerRadius) {
         textAlign(LEFT)
         strokeWeight(0)
         stroke("black");
-        text(x + 1 + ". " + currentNode.response[x].r, textOriginX, textOriginY + (x * selectionSizeY))
+        text(x + 1 + ". " + options[page][x].r, textOriginX, textOriginY + (x * selectionSizeY))
     }
+
+
 }
+
 
 //Draw Loop
 function dialogueDraw() { //draw function for dialogue
