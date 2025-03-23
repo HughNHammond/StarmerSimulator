@@ -31,8 +31,12 @@ let player = {
     pressRating: 50,
     publicRating: 40,
 
+    nextPressRating: 50,
+    nextPublicRating: 40,
+
     draw: function() {
         player.display();
+        player.handleRating();
         //player.displayName(); //for Debug
     },
 
@@ -50,10 +54,38 @@ let player = {
         text(this.name, this.xPos + tileSize/2, this.yPos - 2);
     },
 
-    handleRatingChange: function(pressMin, pressMax) {
+    modifyPressRating: function(pressMin, pressMax) {
         let pressChange = Math.round(random(pressMin, pressMax + 1));
 
-        pressRating += pressChange;
+        this.nextPressRating = this.pressRating + pressChange;
+    },
+
+    modifyPublicRating: function() {
+        let publicChange = Math.round(random(-20, 20));
+
+        this.nextPublicRating = this.publicRating + publicChange;
+    },
+
+    handleRating: function() {
+        if (this.pressRating != this.nextPressRating) {
+            if (this.pressRating < this.nextPressRating) {
+                this.pressRating++;
+            } else {
+                this.pressRating--;
+            }
+
+            this.pressRating = clamp(this.pressRating, 0, 100)
+        }
+
+        if (this.publicRating != this.nextPublicRating) {
+            if (this.publicRating < this.nextPublicRating) {
+                this.publicRating++;
+            } else {
+                this.publicRating--;
+            }
+
+            this.publicRating = clamp(this.pressRating, 0, 100)
+        }
     },
     
     setDirection: function() {

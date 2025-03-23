@@ -36,7 +36,7 @@ function preload() {
 
     podiumSprite = loadImage("art/objects/podium.png")
 
-    backgroundTest = loadImage("art/screens/downing_street_test.png")
+    backgroundTest = loadImage("art/screens/Downing Street Interior.png")
 }
 
 function setup() {
@@ -58,10 +58,6 @@ function setup() {
     createNPCs(); // intialises NPC objects
     createDialogueEvents(); // creates Dialogue Nodes
     attachStartNodesToNPCs(); // attaches starting dialogue nodes to each NPC
-
-
-    //CREATE DIALOGUEs
-   // createDialogueNodes();
 
     podium.yPos += (tileSize/2);
 
@@ -110,3 +106,11 @@ function mapEnabledDraw() {
     }
 }
 
+function timer(lastCount, timerEnd) {
+    if (count - lastCount >= timerEnd) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}

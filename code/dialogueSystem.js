@@ -39,7 +39,7 @@ function createDialogueEvents() {
     */
 
     exampleEvent = [
-        {label: "intro1", speaker: streeting.name, dialogue: "Hello, this is  my intro Dialogue"},
+        {label: "intro1", speaker: streeting.name, dialogue: "Hello, this is  my intro Dialogue", func: () => player.modifyPressRating(20, 50)},
         {label: "intro2", speaker: streeting.name, dialogue: "Here is some more dialogue", goTo: "intro4", func: () => activateNPC(reeves)},
         {label: "intro3", speaker: streeting.name, dialogue: "This dialogue should be skipped"},
         {label: "intro4", speaker: streeting.name, dialogue: "I skipped a node. Would you like me to say something else?",
@@ -67,6 +67,13 @@ function createDialogueEvents() {
 
     anotherEvent = [
         {label: "anotherEvent", speaker: "Streeting", dialogue: "Let's test if I can say this now!"}
+    ]
+
+
+    economySpeech = [
+        {label: "intro1", speaker: player.name, dialogue: "Good morning. Nearly a year ago, the British public voted for change."},
+        {label: "intro2", speaker: player.name, dialogue: "After 14 years of Conservative ruin, Britain needs bold and radical change, and only the Labour Party can deliver it."},
+        {label: "intro3", speaker: player.name, dialogue: "Good morning. Nearly a year ago, the British public voted for change."},
     ]
 }
 
@@ -127,8 +134,14 @@ function updateFromResponseNode() {
 
     //... OR MOVE TO NEXT NODE
     else {
+        let prevNode = currentNode;
         currentNode = currentEvent.find((node) => node.label === currentNode.response[currentSelection].goTo);
         currentIndex = currentEvent.indexOf(currentNode);
+        if (press) {
+            console.log(currentNode);
+            prevNode.response.splice(currentSelection, 1);
+            console.log(prevNode);
+        }
         switchState(dialogue);
     }
 }

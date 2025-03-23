@@ -55,7 +55,7 @@ function attachStartNodesToNPCs() {
     streeting.startNode = exampleEvent;
     reeves.startNode = exampleEvent;
     mcsweeney.startNode = exampleResponse;
-    podium.startNode = exampleEvent;
+    podium.startNode = exampleResponse;
 }
 
 function activateNPC(npc) { 

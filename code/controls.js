@@ -52,11 +52,6 @@ function keyPressed() {
         updateDialogue(); //checks whether to end Dialogue or move to next Node
     } 
 
-    //IF PLAYER HAS SELECTED RESPONSE...
-    else if (keyCode === controls.spacebar && gameState === respond) {
-
-    }
-
     //IF IN TRANSITION STATE
     else if (keyCode === controls.spacebar && gameState === transition) {
         //END TRANSITION
@@ -90,7 +85,6 @@ function keyPressed() {
 
     if (keyCode === controls.f && debug) {
         flipDialogueBox = !flipDialogueBox;
-        console.log('test')
     }
 
     if (keyCode === controls.f && !debug) {
