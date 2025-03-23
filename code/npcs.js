@@ -18,16 +18,16 @@ let active = 1;
 //FUNCTIONS
 
 function createNPCs() {
-    streeting = new NPC("WES STREETING", streetingSprite, 3, 4, 0, active);
+    streeting = new NPC("WES STREETING", streetingSprite, 3, 4, 0, active, true);
     npcs[streeting.characterID] = streeting;
 
-    reeves = new NPC("RACHEL REEVES", streetingSprite, 8, 3, 1, inactive)
+    reeves = new NPC("RACHEL REEVES", streetingSprite, 8, 3, 1, inactive, true)
     npcs[reeves.characterID] = reeves;
 
-    mcsweeney = new NPC("MORGAN MCSWEENEY", streetingSprite, 6, 8, 2, active)
+    mcsweeney = new NPC("MORGAN MCSWEENEY", streetingSprite, 6, 8, 2, active, true)
     npcs[mcsweeney.characterID] = mcsweeney;
 
-    podium = new NPC("KEIR STARMER", podiumSprite, 5, 5, 3, active)
+    podium = new NPC("PODIUM", podiumSprite, 5, 5, 3, active, false)
     npcs[podium.characterID] = podium;
 
 
@@ -79,13 +79,7 @@ function drawNPCs() {
     displayNPCs();
 }
 
-function displayNPCs() {
-    for (x = 0; x < activeNPCs.length; x++) {
-        if (activeNPCs[x].active)
-            activeNPCs[x].display();
-            activeNPCs[x].displayName();
-    }
-}
+
 
 
 function setStartNode(npc, event) {
@@ -95,7 +89,7 @@ function setStartNode(npc, event) {
 
 
 class NPC {
-    constructor(name, sprite, tileX, tileY, characterID, active) {
+    constructor(name, sprite, tileX, tileY, characterID, active, collision) {
         this.name = name;
         this.sprite = sprite
         
@@ -114,6 +108,8 @@ class NPC {
 
 
         this.active = active;
+
+        this.collision = collision //checks if NPC should trigger collisions
     }
 
     display() {

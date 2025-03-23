@@ -145,10 +145,19 @@ let player = {
         for (x = 0; x < activeNPCs.length; x++) {
             if (activeNPCs[x].tileX === nextTileHorizontal && activeNPCs[x].tileY === nextTileVertical) 
             {
-                if (activeNPCs[x].active) {
+                if (activeNPCs[x].collision) {
                      return;
                 }
             }
+        }
+
+        //THIS CODE MAKES IT SO THE PODIUM CANNOT BE WALKED VERTICALLY THROUGH!
+        if (podium.tileX === nextTileHorizontal && podium.tileY === nextTileVertical - 1 && this.dirY === 1 && currentLevel === exterior) {
+            console.log(this.dirY)
+            return;
+        }
+        else if (podium.tileX === nextTileHorizontal && podium.tileY === nextTileVertical && this.dirY === -1 && currentLevel === exterior) {
+            return;
         }
 
         //check is that tile is in bounds of the map
@@ -204,8 +213,6 @@ let player = {
             this.animateWalk = false;
             this.spriteIndex = 0;
         }
-
-        console.log(this.animateWalk)
     },
 
     animateSprite: function() {

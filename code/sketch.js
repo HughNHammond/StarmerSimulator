@@ -17,8 +17,6 @@ let interiorImage;
 let exteriorImage;
 
 function preload() {
-    textures[0] = loadImage("art/tiles/grassy.png")
-    textures[1] = loadImage("art/tiles/stone.png")
 
     player.sprites = {
         up: [loadImage('art/characters/starmer/starmer_up_walk/starmer_up_walk0.png'), loadImage('art/characters/starmer/starmer_up_walk/starmer_up_walk1.png'), loadImage('art/characters/starmer/starmer_up_walk/starmer_up_walk2.png'), loadImage('art/characters/starmer/starmer_up_walk/starmer_up_walk3.png')],
@@ -101,8 +99,8 @@ function mapEnabledDraw() {
     noSmooth();
     //loopTilesAndRunFunc(tile => tile.display());
     image(backgroundImage, 0, 0, width, height)
-    player.draw()
-    drawNPCs();
+
+    displayCharacters();
    //podium.display();
 
 
@@ -110,6 +108,23 @@ function mapEnabledDraw() {
     if (debug) {
         loopTilesAndRunFunc(tile => tile.debug()) //Adds grid to tileMap
         console.log("current state is: " + gameState)
+    }
+}
+
+function displayCharacters() {
+
+    player.draw()
+
+    for (x = 0; x < activeNPCs.length; x++) {
+        if (activeNPCs[x].active)
+            activeNPCs[x].display();
+            activeNPCs[x].displayName();
+    }
+
+    if (currentLevel === exterior) {
+        if (player.tileY >= 6) {
+            player.display();
+        }
     }
 }
 
@@ -121,3 +136,4 @@ function timer(lastCount, timerEnd) {
         return false;
     }
 }
+

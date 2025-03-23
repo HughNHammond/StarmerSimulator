@@ -4,33 +4,6 @@ let tilesY = 9;
 let tileSize = 60;
 let tileID = 0;
 
-let textures = [];
-
-let spriteMap = [
-//   0   1   2   3   4   5   6   7   8   9   10
-    [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //0
-    [0,  0,  0,  1,  0,  0,  0,  0,  0,  0,  0], //1
-    [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //2
-    [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //3
-    [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //4
-    [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //5
-    [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //6
-    [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //7
-    [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //8
-]
-
-let tileRules = [
-//   0   1   2   3   4   5   6   7   8   9   10  
-    [1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1], //0
-    [1,  1,  1,  1,  1,  0,  1,  1,  1,  1,  1], //1
-    [1,  1,  1,  1,  1,  0,  1,  1,  1,  1,  1], //2
-    [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //3
-    [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //4
-    [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //5
-    [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //6
-    [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //7
-    [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0], //8
-]
 
 let interior = {
     tileRules: [
@@ -46,7 +19,7 @@ let interior = {
             [1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1], //8
         ],
     backgroundImage: null,
-    activeNPCs: () => [reeves, mcsweeney, streeting],
+    activeNPCs: () => [mcsweeney, streeting],
     startX: 5,
     startY: 8,
     nextLevel: 1
@@ -77,12 +50,15 @@ let currentLevel;
 let levels = [interior, exterior]
 
 function loadLevel(level) {
+    //LOAD LEVEL DATA
     currentLevel = level;
     tileRules = level.tileRules;
     activeNPCs = level.activeNPCs();
     player.xPos = level.startX * tileSize;
     player.yPos = level.startY * tileSize;
     backgroundImage = level.backgroundImage;
+
+    //CREATE NEW TILEMAP
     for (let x = 0; x < tilesX; x++) {
         tilemap[x] = [];
         for (let y = 0; y < tilesY; y++) {
