@@ -120,7 +120,7 @@ function updateFromResponseNode() {
     if (currentNode.response[currentSelection].func != undefined) { currentNode.response[currentSelection].func(); };
 
     //... END DIALOGUE IF NO NEXT NODE
-    if (currentNode.response[currentSelection].goTo === undefined) {
+    if (currentNode.response[currentSelection].goTo === undefined || currentNode.response[currentSelection].goTo === end) {
         switchState(walk);
         return;
     }
@@ -171,8 +171,8 @@ function drawDialogueBox() {
     }
     else { //if on upper half of screen
         //BOX DRAWN BELOW
-        boxOriginY = -40; 
-        textOriginY = boxOriginY + boxTextPadding - 18;
+        boxOriginY = -30; 
+        textOriginY = boxOriginY + boxTextPadding + 28;
     }
 
 
@@ -182,6 +182,10 @@ function drawDialogueBox() {
 
     rect(boxOriginX, boxOriginY, boxSizeX, boxSizeY, cornerRadius);
 
+    if (press) {
+        displayRatings(boxOriginX, boxSizeX, cornerRadius);
+    }
+
     if (gameState === dialogue) {
         drawDialogueText(boxSizeX, boxSizeY, textOriginX, textOriginY, boxTextPadding);
     }
@@ -189,6 +193,34 @@ function drawDialogueBox() {
         drawResponseText(boxOriginX,  boxSizeX, boxSizeY, textOriginX, textOriginY, cornerRadius)
     }
 
+
+
+}
+
+function displayRatings(boxOriginX, boxSizeX, cornerRadius) {
+    let perfBoxOriginX = boxOriginX + tileSize;
+    let perfBoxOriginY = (tileSize * 7.5 + 10);
+    let perfBoxSizeY = tileSize * 1.5;
+
+    rect(perfBoxOriginX, perfBoxOriginY, boxSizeX - (tileSize * 2), perfBoxSizeY, cornerRadius);
+
+    let pressRating = (tileSize * 3.5) * (player.pressRating / 100);
+    let publicRating = (tileSize * 3.5) * (player.publicRating / 100);
+
+    fill(5, 93, 169);
+    rect(perfBoxOriginX + tileSize * 2.8, perfBoxOriginY + 21, pressRating, 18, cornerRadius);
+    rect(perfBoxOriginX + tileSize * 2.8, perfBoxOriginY + 51, publicRating, 18, cornerRadius);
+
+
+    noStroke();
+    fill(255, 255, 255);
+    textAlign(RIGHT);
+    textSize(18);
+    text("PRESS RATING:  ", perfBoxOriginX + tileSize * 2.7, perfBoxOriginY + 35);
+    text("PUBLIC RATING:  ", perfBoxOriginX + tileSize * 2.7, perfBoxOriginY + 65);
+    textAlign(LEFT);
+    text(player.pressRating + "%", perfBoxOriginX + tileSize * 3.0 + pressRating, perfBoxOriginY + 35);
+    text(player.publicRating + "%", perfBoxOriginX + tileSize * 3.0 + publicRating, perfBoxOriginY + 65);
 }
 
 function drawDialogueText(boxSizeX, boxSizeY, textOriginX, textOriginY, boxTextPadding) {

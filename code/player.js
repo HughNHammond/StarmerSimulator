@@ -27,6 +27,10 @@ let player = {
     dirY: 0,
     speed: 6, //must be a factor (i.e. divisible by) tileSize.
 
+    //RATINGS
+    pressRating: 50,
+    publicRating: 40,
+
     draw: function() {
         player.display();
         //player.displayName(); //for Debug
@@ -164,11 +168,9 @@ let player = {
 
     animateSprite: function() {
         if (this.animateWalk) {
-            console.log("AnimateWalk called")
             if (count - lastCount >= timerMax) {
                 lastCount = count;
                 this.spriteIndex++;
-                console.log(this.spriteIndex)
                 if (this.spriteIndex >= this.spriteDirection.length) this.spriteIndex = 0; //this checks if this.spriteIndex is bigger than the direciotn array
             }
         }

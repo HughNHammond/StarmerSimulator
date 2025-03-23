@@ -24,7 +24,7 @@ function createNPCs() {
     reeves = new NPC("RACHEL REEVES", streetingSprite, 8, 3, null, 1, inactive)
     npcs[reeves.characterID] = reeves;
 
-    mcsweeney = new NPC("MORGAN MCSWEENEY", streetingSprite, 6, 3, null, 2, active)
+    mcsweeney = new NPC("MORGAN MCSWEENEY", streetingSprite, 6, 8, null, 2, active)
     npcs[mcsweeney.characterID] = mcsweeney;
 
     podium = new NPC("KEIR STARMER", podiumSprite, 5, 5, null, 3, active)
