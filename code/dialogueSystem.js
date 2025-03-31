@@ -16,10 +16,17 @@ let currentNode;
 let currentIndex;
 let currentSelection = 0;
 
-let exampleEvent = [];
-let anotherEvent = [];
-let exampleResponse = [];
+//EVENTS
+let streetingDay1 = [];
+let reevesDay1 = [];
+let economySpeed = [];
+let econSpeechResponses = [];
+
+//IMPORTANT STRINGS
 let end = "end";
+let reporter = "REPORTER"
+
+
 
 function createDialogueEvents() {
 
@@ -38,31 +45,23 @@ function createDialogueEvents() {
         it would be called when the code starts and the object is created, not when called in my script.
     */
 
-    exampleEvent = [
-        {label: "intro1", speaker: streeting.name, dialogue: "Hello, this is  my intro Dialogue", func: () => player.modifyPressRating(20, 50)},
-        {label: "intro2", speaker: streeting.name, dialogue: "Here is some more dialogue", goTo: "intro4", func: () => activateNPC(reeves)},
-        {label: "intro3", speaker: streeting.name, dialogue: "This dialogue should be skipped"},
-        {label: "intro4", speaker: streeting.name, dialogue: "I skipped a node. Would you like me to say something else?",
+
+    streetingDay1 = [
+        {label: "streeting1", speaker: streeting.name, dialogue: "Good morning Prime Minister. If you want my advice..."},
+        {label: "streeting2", speaker: streeting.name, dialogue: "Have you considered being inexpilcably racist?",
             response: [
-                {r: "God no, shuttup Wesley.", goTo: end},
-                {r: "Yes please, I hate myself.", goTo: "intro5", func: () => setStartNode(streeting, anotherEvent)}
+                {r: "Where's Rachel?", goTo: "reevesTrigger1", func: () => activateNPC(reeves)},
+                {r: "Uhhh... thank you Wesley.", goTo: end}
             ]
         },
-        {label: "intro5", speaker: streeting.name, dialogue: "If you talk to me again, I'll say something new!", goTo: end}
+        {label: "reevesTrigger1", speaker: streeting.name, dialogue: "Look, she's just come in. She's looking....."}
     ]
 
-    exampleResponse = [
-        {label: "respond1", speaker: mcsweeney.name, dialogue: "You can choose some options now.", 
-            response: [
-                {r: "Here is one response.", goTo: "respond2"},
-                {r: "This is a second response.", goTo: "respond3"},
-                {r: "This ends dialogue.", goTo: end},
-                {r: "This is the first response again.", goTo: "respond2"},
-                {r: "This is the second response again", goTo: "respond3"}
-            ]
-        },
-        {label: "respond2", speaker: mcsweeney.name, dialogue: "You picked the first option.", goTo: end},
-        {label: "respond3", speaker: mcsweeney.name, dialogue: "You picked the second option.", goTo: end}
+    reevesDay1 = [
+        {label: "reeves1", speaker: reeves.name, dialogue: "..."},
+        {label: "reeves2", speaker: reeves.name, dialogue: "..............."},
+        {label: "reeves3", speaker: reeves.name, dialogue: ".................................. gggggg"},
+        {label: "reeves4", speaker: reeves.name, dialogue: "grrrrrrrrrrwwwwwwwwwwwwooooooooo OOOOOOOTTTTTTTTTTTTTHHHHHHHHHH HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH."}
     ]
 
     anotherEvent = [
@@ -70,10 +69,63 @@ function createDialogueEvents() {
     ]
 
 
+    econSpeechResponses = [               
+        {r: "Address disability cuts.", goTo: "disability1"},
+        {r: "Empathsise with the public", goTo: "empathy1"},
+        {r: "Propose a small wealth tax", goTo: "wealth1"},
+        {r: "Announce policies to fix the NHS", goTo: "NHS1"},
+        {r: "Address the housing crisis", goTo: "housing1"},
+        {r: "Be inexplicably racist", goTo: "racism"},
+        {r: "Pledge to actually address wealth inequality", goTo: "gameOver"}
+    ]
+
     economySpeech = [
+
+        //INTRO
         {label: "intro1", speaker: player.name, dialogue: "Good morning. Nearly a year ago, the British public voted for change."},
         {label: "intro2", speaker: player.name, dialogue: "After 14 years of Conservative ruin, Britain needs bold and radical change, and only the Labour Party can deliver it."},
-        {label: "intro3", speaker: player.name, dialogue: "Good morning. Nearly a year ago, the British public voted for change."},
+        {label: "intro3", speaker: player.name, dialogue: "I spoke to a woman this morning who had voted Conservative for nearly three decades."},
+        {label: "intro4", speaker: player.name, dialogue: "but she put her trust in the Labour Party in the last election, because she knew this transformed Labour Party shared her values."},
+        {label: "intro5", speaker: player.name, dialogue: "We've had to make some tough choices, and they haven't all been popular."},
+        {label: "intro6", speaker: player.name, dialogue: "I'm not afraid to make tough choices, to cut what needs cutting, and promote the growth this country so desperately needs.", response: econSpeechResponses},
+
+        //ADDRESS DISABILITY CUTS
+        //{label: "Disability1", speaker: player.name, dialogue: ""},
+        {label: "disability1", speaker: player.name, dialogue: "Whenever the Conservatives announced cuts to welfare, I welcomed their proposals, but I urged them to go further."},
+        {label: "disability2", speaker: player.name, dialogue: "The wreckless spending of the Conservative party means it is up to the Labour Party to get Britain working again."},
+        {label: "disability3", speaker: player.name, dialogue: "The welfare system is indefensible, both economically and morally.", func: () => player.modifyPressRating(-5, -7)},
+        {label: "disability4", speaker: player.name, dialogue: "Hundreds of thousands people given hand outs without any hope."},
+        {label: "disability5", speaker: player.name, dialogue: "We are the Labour Party. Our mission is to deliver hope, and we will do that by getting people back to work."},
+        {label: "disability6", speaker: player.name, dialogue: "That is why last week I announced our plans to cut disability spending, saving the public £7 billion."},
+        {label: "disability7", speaker: player.name, dialogue: "This has shocked some members of the public, but we will not listen to those who wish to exclude the disabled from economic life."},
+        {label: "disability8", speaker: player.name, dialogue: "Why give out benefits when there are the benefits of work? Haw haw haw."},
+        {label: "disability9", speaker: player.name, dialogue: "We have partnered with Amazon, who will be delivering the new 'Get up, Get Out' program, helping disabled people find work at Amazon Warehouses."},
+        {label: "disability10", speaker: player.name, dialogue: "Last week, I visited an Amazon warehouse and I realised something."},
+        {label: "disability11", speaker: player.name, dialogue: "Working in an Amazon Warehouse isn't just gruelling physical labour, it can also be a great form of physio therapy.", func: () => player.modifyPressRating(5, 10)},
+        {label: "disability12", speaker: player.name, dialogue: "I saw workers stretch key muscle groups reaching for packages on a high shelf.", func: () => player.modifyPressRating(5, 10)},
+        {label: "disability13", speaker: player.name, dialogue: "I saw workers gaining muscle mass rushing around the warehouse at break-necks speeds."},
+        {label: "disability14", speaker: player.name, dialogue: "Oh, uh, I thought we cut that line."},
+        {label: "disability15", speaker: reporter, dialogue: "Keir Starmer announces his empathetic plan to disabled workers back to work. Say what you like about the man,"},
+        {label: "Disability16", speaker: reporter, dialogue: "But this is a sensible and proportional plan that I can't find any fault in.", func: () => player.modifyPressRating(15, 20), response: econSpeechResponses},
+
+        //EMPATHISE WITH PUBLIC
+        //{label: "empathy1", speaker: player.name, dialogue: ""}
+        {label: "empathy1", speaker: player.name, dialogue: "When the Labour Party formed this government, we told you that there were tough times ahead."},
+        {label: "empathy2", speaker: player.name, dialogue: "So I don't know why you're complaining about it now."},
+        {label: "empathy3", speaker: player.name, dialogue: "But I do understand that some people are struggling every day, and I want to tell you:"},
+        {label: "empathy4", speaker: player.name, dialogue: "I am right there, struggling with you."},
+        {label: "empathy5", speaker: player.name, dialogue: "Last week, my wife and I came to the decision that we would have to make sacrifices in our own food budget."},
+        {label: "empathy6", speaker: player.name, dialogue: "The wreckless spending of the Conservative Party means that Waitrose is now simply too expensive for us."},
+        {label: "empathy7", speaker: player.name, dialogue: "Instead, we would have been forced to buy food from the Sainsbury's Taste The Difference range.", func: () => player.modifyPressRating(-10, -20)},
+        {label: "empathy8", speaker: player.name, dialogue: "Luckily, my son picked up a local paper route and mowed some neighbours lawns so we could keep going to Waitrose."},
+        {label: "empathy9", speaker: player.name, dialogue: "Why don't you see if you can get a local paper route, or see if your neighbours need their lawn mowing?"},
+        {label: "empathy10", speaker: player.name, dialogue: "If we all did that, we could all go to Waitrose, which I think would be fun."},
+        {label: "empathy11", speaker: reporter, dialogue: "Terrifying news from Westminster as PM suggests I do manual labour.", func: () => player.modifyPressRating(-10, -20), response: econSpeechResponses},
+
+        //PROPOSE A SMALL WEALTH TAX
+        //{label: "wealth1", speaker: player.name, dialogue: " "},
+        {label: "wealth1", speaker: player.name, dialogue: "When the Labour Party formed this government, we told you that there were tough times ahead."},
+        
     ]
 }
 
@@ -203,7 +255,7 @@ function drawDialogueBox() {
         drawDialogueText(boxSizeX, boxSizeY, textOriginX, textOriginY, boxTextPadding);
     }
     else if (gameState === respond) {
-        drawResponseText(boxOriginX,  boxSizeX, boxSizeY, textOriginX, textOriginY, cornerRadius)
+        drawResponseText(boxOriginX, boxOriginY,  boxSizeX, boxSizeY, textOriginX, textOriginY, cornerRadius)
     }
 
 
@@ -262,7 +314,7 @@ function drawDialogueText(boxSizeX, boxSizeY, textOriginX, textOriginY, boxTextP
     text(currentNode.dialogue, textOriginX, textOriginY + 40, boxSizeX - (boxTextPadding * 1.5), boxSizeY - boxTextPadding);
 }
 
-function drawResponseText(boxOriginX, boxSizeX, boxSizeY, textOriginX, textOriginY, cornerRadius) {
+function drawResponseText(boxOriginX, boxOriginY, boxSizeX, boxSizeY, textOriginX, textOriginY, cornerRadius) {
 
     //Clamps current selection so cannot exceed number of responses
     currentSelection = clamp(currentSelection, 0, currentNode.response.length - 1);
@@ -283,13 +335,13 @@ function drawResponseText(boxOriginX, boxSizeX, boxSizeY, textOriginX, textOrigi
         page = 0;
         cursorPosition = currentSelection;
         if (options.length > 1) {
-            image(downArrow, boxOriginX + boxSizeX - 60, height - 50, 50, 50);
+            image(downArrow, boxOriginX + boxSizeX - 60, boxOriginY + 200, 50, 50);
         }
     }
     else {
         page = 1;
         cursorPosition = currentSelection - 4;
-        image(upArrow, boxOriginX + boxSizeX - 60, height - boxSizeY + 60, 50, 50);
+        image(upArrow, boxOriginX + boxSizeX - 60, boxOriginY + 50, 50, 50);
     }
 
     //Runs a for loop to draw the text on screen for each option and highlight the relevant option
@@ -313,13 +365,17 @@ function drawResponseText(boxOriginX, boxSizeX, boxSizeY, textOriginX, textOrigi
             fill(255, 255, 255);
         }
 
+        let num;
+        if (page === 0) num = x;
+        else num = x + 4;
+
         //fill(255, 255, 255) //TEMP FILL
         textSize(20)
         textStyle("bold")
         textAlign(LEFT)
         strokeWeight(0)
         stroke("black");
-        text(x + 1 + ". " + options[page][x].r, textOriginX, textOriginY + (x * selectionSizeY))
+        text(num + 1 + ". " + options[page][x].r, textOriginX, textOriginY + (x * selectionSizeY))
     }
 
 

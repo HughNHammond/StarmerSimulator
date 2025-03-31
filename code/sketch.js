@@ -116,9 +116,12 @@ function displayCharacters() {
     player.draw()
 
     for (x = 0; x < activeNPCs.length; x++) {
-        if (activeNPCs[x].active)
-            activeNPCs[x].display();
-            activeNPCs[x].displayName();
+        if (activeNPCs[x] != undefined) {
+            if (activeNPCs[x].active) {
+                activeNPCs[x].display();
+                //activeNPCs[x].displayName();
+            }
+        }
     }
 
     if (currentLevel === exterior) {

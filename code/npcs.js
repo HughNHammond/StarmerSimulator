@@ -21,42 +21,21 @@ function createNPCs() {
     streeting = new NPC("WES STREETING", streetingSprite, 3, 4, 0, active, true);
     npcs[streeting.characterID] = streeting;
 
-    reeves = new NPC("RACHEL REEVES", streetingSprite, 8, 3, 1, inactive, true)
+    reeves = new NPC("RACHEL REEVES", streetingSprite, 5, 0, 1, inactive, true)
     npcs[reeves.characterID] = reeves;
 
-    mcsweeney = new NPC("MORGAN MCSWEENEY", streetingSprite, 6, 8, 2, active, true)
-    npcs[mcsweeney.characterID] = mcsweeney;
+    //mcsweeney = new NPC("MORGAN MCSWEENEY", streetingSprite, 6, 8, 2, active, true)
+    //npcs[mcsweeney.characterID] = mcsweeney;
 
     podium = new NPC("PODIUM", podiumSprite, 5, 5, 3, active, false)
     npcs[podium.characterID] = podium;
-
-
-
-    //REPORTERS
-    
-    // reporter1 = new NPC("Reporter #1", null, null, null, pressEvent1, 10, inactive);
-    // npcs[reporter1.characterID] = reporter1;
-
-    // reporter2 = new NPC("Reporter #2", null, null, null, pressEvent1, 10, inactive);
-    // npcs[reporter2.characterID] = reporter2;
-
-    // reporter3 = new NPC("Reporter #3", null, null, null, pressEvent1, 10, inactive);
-    // npcs[reporter3.characterID] = reporter3;
-
-    // reporter4 = new NPC("Reporter #4", null, null, null, pressEvent1, 10, inactive);
-    // npcs[reporter4.characterID] = reporter4;
-
-
-    // for (let npc in npcs) {
-    //     if (npcs[npc].active) {activeNPCs.push(npcs[npc]);}
-    // }
 }
 
 function attachStartNodesToNPCs() {
-    streeting.startNode = exampleEvent;
-    reeves.startNode = exampleEvent;
-    mcsweeney.startNode = exampleResponse;
-    podium.startNode = exampleResponse;
+    streeting.startNode = streetingDay1;
+    reeves.startNode = reevesDay1;
+    //mcsweeney.startNode = exampleResponse;
+    podium.startNode = economySpeech;
 }
 
 function activateNPC(npc) { 

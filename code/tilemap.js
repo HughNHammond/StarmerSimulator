@@ -19,7 +19,7 @@ let interior = {
             [1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1], //8
         ],
     backgroundImage: null,
-    activeNPCs: () => [mcsweeney, streeting],
+    activeNPCs: () => [streeting],
     startX: 5,
     startY: 8,
     nextLevel: 1
