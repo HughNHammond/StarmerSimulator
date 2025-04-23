@@ -1,23 +1,26 @@
-let debug = false; // Activates debug display
+//INITIAL VARIABLES
 
-let startFont;
+//Bool that tracks if debug is active
+let debug = false; 
 
+//Empty variables for art
 let podium;
 let podiumSprite;
 let downArrow;
 let upArrow;
 
-let count = 0;
-let lastCount = 0
-let timerMax = 6;
+//Variables for font
+let startFont;
+let dialogueFont;
 
 //IMAGES
 let backgroundImage;
 let interiorImage;
 let exteriorImage;
 
+//Bespoke bools for one-time events
 let phoneCall = false; //if false, call dialgoue will start when game starts.
-let pressCompleted = false;
+let pressCompleted = false; //checks if the press event has been finished to end the game
 
 function preload() {
 
@@ -31,6 +34,8 @@ function preload() {
 
     //NPC Sprites
     streetingSprite = loadImage("art/characters/streeting/streeting_down.png");
+    reevesSprite = loadImage("art/characters/reeves.png");
+    kendallSprite = loadImage("art/characters/kendall.png");
     podiumSprite = loadImage("art/objects/podium.png")
 
     //Tilemap images
@@ -53,8 +58,6 @@ function preload() {
 
 function setup() {
 
-    noSmooth(); //This turns off smoothing on images, which I don't want on pixel art
-
     //Set Starting States
     player.spriteDirection = player.sprites.down; //Defaults player sprite to show down-facing sprite
     transitionState = waitTransition //Skips fade-in on start screen transition
@@ -68,12 +71,12 @@ function setup() {
     //CREATE NPCs
     createNPCs(); // intialises NPC objects
     createDialogueEvents(); // creates Dialogue Nodes
-    attachStartNodesToNPCs(); // attaches starting dialogue nodes to each NPC
+    attachDialogueEventsToNPCs(); // attaches starting dialogue nodes to each NPC
 
     //Set and load the first level!
     loadLevel(interior)
 
-    //Set Player Start Position (I want the player to start in a different position when the level is first loaded!)
+    //Set Player Start Position (I want the player to start in a different position when the game starts than the positioned stored in the level object)
     player.xPos = playerStartX * tileSize;
     player.yPos = playerStartY * tileSize;
 
@@ -102,35 +105,30 @@ function draw() {
 
 function mapEnabledDraw() {
 
+    //This checks if the level transition has finished and if the initial phone call has taken place. If both are false, the phone call starts.
     if (!transitioning && !phoneCall) {
         switchState(dialogue);
         startDialogue(mcsweeney);
         phoneCall = true;
     }
 
-    //The => is called an arrow function. What it's doing here is creating a temporary variable called 'tile' (notice it's not
-    //plural!), and saying "go inside the object in that variable and find a function calld display()". So when loopTilesAndRunFunc()
-    //gets to func(tilemap[x][y]), it knows that it should look inside the tile stored in tilemap at the x and y index and find and run
-    //a function called display(). It will do this for every single tile before doing it again for debug() if enabled.
-    noSmooth();
-    //loopTilesAndRunFunc(tile => tile.display());
-    image(backgroundImage, 0, 0, width, height)
-
-    displayCharacters();
-   //podium.display();
-
+    //DISPLAY ART
+    noSmooth(); //This turns off smoothing on images, which I don't want on pixel art
+    image(backgroundImage, 0, 0, width, height) //sets background image
+    displayCharacters(); //displays all NPCs who should current be loaded.
 
     //DEBUG CODE
     if (debug) {
-        loopTilesAndRunFunc(tile => tile.debug()) //Adds grid to tileMap
-        console.log("current state is: " + gameState)
+        displayTileMapDebug(); //Adds grid to tileMap
+        console.log("current state is: " + gameState) // prints number of current state to console.
     }
 }
 
 function displayCharacters() {
-
+    //DRAW PLAYER
     player.draw()
 
+    //DRAW CURRENTLY ACTIVELY NPC SPRITES
     for (x = 0; x < activeNPCs.length; x++) {
         if (activeNPCs[x] != undefined) {
             if (activeNPCs[x].active) {
@@ -140,8 +138,10 @@ function displayCharacters() {
         }
     }
 
+    //HANDLE PODIUM/PLAYER DISPLAY
     if (currentLevel === exterior) {
         if (player.tileY >= 6) {
+            //If the player's tileY is less than 6 (the podium location), display the player again so they appear on top of the podium
             player.display();
         }
     }

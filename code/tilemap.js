@@ -9,7 +9,7 @@ let interior = {
     name: "interior",
     tileRules: [
         //   0  1  2  3  4  5  6  7  8  9  10  
-            [1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1], //0
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], //0
             [1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1], //1
             [1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1], //2
             [1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1], //3
@@ -72,11 +72,11 @@ function loadLevel(level) {
 }
 
 
-function loopTilesAndRunFunc(func) {
+function displayTileMapDebug() {
     //SEE NOTES ON SKETCH UNDER DRAW()
     for (let x = 0; x < tilesX; x++) {
         for (let y = 0; y < tilesY; y++) {
-            func(tilemap[x][y])
+            tilemap[x][y].debug();
         }
     }
 }

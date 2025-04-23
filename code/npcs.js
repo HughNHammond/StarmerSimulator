@@ -4,9 +4,12 @@ let activeNPCs = [];
 
 //CREATE SPECIFIC CHARACTERS
 let streeting; //name
-let reeves;
-let kendall;
 let streetingSprite; //sprite
+let reeves;
+let reevesSprite;
+let kendall;
+let kendallSprite;
+
 let mcsweeney;
 
 let reporter1;
@@ -22,10 +25,10 @@ function createNPCs() {
     streeting = new NPC("WES STREETING", streetingSprite, 3, 4, 0, active, true);
     npcs[streeting.characterID] = streeting;
 
-    reeves = new NPC("RACHEL REEVES", streetingSprite, 5, 3, 1, active, true)
+    reeves = new NPC("RACHEL REEVES", reevesSprite, 5, 3, 1, active, true)
     npcs[reeves.characterID] = reeves;
 
-    kendall = new NPC("LIZ KENDALL", streetingSprite, 7, 4, 2, active, true)
+    kendall = new NPC("LIZ KENDALL", kendallSprite, 7, 4, 2, active, true)
     npcs[kendall.characterID] = kendall
 
     mcsweeney = new NPC("MORGAN MCSWEENEY", null, null, null, 3, inactive, false)
@@ -35,12 +38,12 @@ function createNPCs() {
     npcs[podium.characterID] = podium;
 }
 
-function attachStartNodesToNPCs() {
-    streeting.startNode = streetingDay1;
-    reeves.startNode = reevesDay1;
-    kendall.startNode = kendallDay1;
-    mcsweeney.startNode = mcsweeneyCall1;
-    podium.startNode = economySpeech;
+function attachDialogueEventsToNPCs() {
+    streeting.dialogueEvent = streetingDay1;
+    reeves.dialogueEvent = reevesDay1;
+    kendall.dialogueEvent = kendallDay1;
+    mcsweeney.dialogueEvent = mcsweeneyCall1;
+    podium.dialogueEvent = economySpeech;
 }
 
 function activateNPC(npc) { 
@@ -63,15 +66,6 @@ function drawNPCs() {
     displayNPCs();
 }
 
-
-
-
-function setStartNode(npc, event) {
-    npc.startNode = event;
-}
-
-
-
 class NPC {
     constructor(name, sprite, tileX, tileY, characterID, active, collision) {
         this.name = name;
@@ -87,7 +81,7 @@ class NPC {
         this.size = tileSize;
         this.characterID = characterID;
 
-        this.startNode; //What dialogue they will start when dialogue is started
+        this.dialogueEvent; //What dialogue they will start when dialogue is started
         this.currentNode;
 
 

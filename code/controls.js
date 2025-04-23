@@ -79,9 +79,7 @@ function keyPressed() {
 
     //TOGGLES DEBUG DISPLAY FOR MAP
     if (keyCode === controls.slash) {
-        //debug = !debug;
-        currentTransitionText = win;
-        setTransition(startTransition)
+        debug = !debug;
     }
 
     //TOOGLES BETWEEN WALK AND DIALOGUE STATES FOR DEBUG

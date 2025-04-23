@@ -9,6 +9,10 @@ function setValueChange(value, change) {
     target.c = change;
 }
 
+let count = 0;
+let lastCount = 0
+let timerMax = 6;
+
 function timer(lastCount, timerEnd) {
     if (count - lastCount >= timerEnd) {
         return true;
