@@ -145,7 +145,7 @@ function createDialogueEvents() {
         {r: "Address the housing crisis", goTo: "housing1"},
         {r: 'Scream "GROWTH"', goTo: "growth1"},
         {r: "Be inexplicably racist", goTo: "racism"},
-        {r: "Pledge to actually address wealth inequality", goTo: "left1"}
+        {r: "Pledge to address material issues", goTo: "left1"}
     ]
 
     //SPECEH DIALOGUE
@@ -238,7 +238,16 @@ function createDialogueEvents() {
         {label: "racism", speaker: player.name, dialogue: "[Author's Note: I ain't writing this.]", func: () => player.modifyPressRating(100, 100), response: econSpeechResponses},
 
         //ADRDRESS WEALTH INEQUALITY
-        {label: "left1", speaker: player.name, dialogue: "This is... None of this will work. We need to actually improve peoples lives, address the injustices of an ecoonomy built on the exploitation of labour...", func: () => endGame(kicked)},
+        {label: "left1", speaker: player.name, dialogue: "Whatever we do, however far we go to the right, it's not enough for you people."},
+        {label: "left2", speaker: reporter, dialogue: "He's right, it's not."},
+        {label: "left3", speaker: player.name, dialogue: "We're outflanking Reform from the right on immigration, and it's still not working!"},
+        {label: "left4", speaker: player.name, dialogue: "What if..."},
+        {label: "left5", speaker: player.name, dialogue: "What if we actually addressed that we live in a society based on the exploitation of the poor by the rich?"},
+        {label: "left6", speaker: player.name, dialogue: "Or if that's too much..."},
+        {label: "left7", speaker: player.name, dialogue: "How about we just stopped being so racist?", func: () => endGame(kicked)},
+        
+        
+
 
         //End Speech
         {label: "end1", speaker: player.name, dialogue: "Sacrifices must be made, but it is necessary to build Britain back bett- I mean to get Britain's future back, together.", func: () => setPressCompletedToTrue()},
