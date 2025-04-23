@@ -17,30 +17,39 @@ let controls = {
 
 function keyPressed() {
 
-    //IF PLAYER PRESSES SPACE KEY, SWITCHES BETWEEN DIALOGUE AND WALK STATE (FOR TESTING)
-
+    //IF PLAYER PRESSES SPACE KEY, CHECKS WHICH DIRECTION PLAYER IS IN THEN 
     if (keyCode === controls.spacebar && gameState === walk) {
-        //CHECKS IF PLAYER IS NEAR NPC AND INITIATES DIALOGUE
+
+        let dirX;
+        let dirY;
+
+        switch (player.spriteDirection) {
+            case player.sprites.up:
+                dirX = 0;
+                dirY = -1;
+                break;
+            case player.sprites.down:
+                dirX = 0;
+                dirY = 1;
+                break;
+            case player.sprites.left:
+                dirX = -1;
+                dirY = 0;
+                break;
+            case player.sprites.right:
+                dirX = 1;
+                dirY = 0;
+        }
+
         for (let npc = 0; npc < activeNPCs.length; npc++) {
-            let npcX = activeNPCs[npc].tileX - player.tileX;
-            let npcY = activeNPCs[npc].tileY - player.tileY;
-        
-            switch (`${npcX},${npcY}`) { //the `` here creates a string template, where it takes the value of dx and dy
-                                     //and creates a string with those values.
-                case "0,-1": // NPC is above the player
-                case "0,1":  // NPC is below the player
-                case "1,0":  // NPC is to the right of the player
-                case "-1,0": // NPC is to the left of the player
-                    console.log(npcs[npc]);
-                    if (activeNPCs[npc] === podium) press = true;
-                    else press = false;
-                    switchState(dialogue);
-                    startDialogue(activeNPCs[npc]);
-                    break;
+
+            if (activeNPCs[npc].tileX === (player.tileX + dirX) && activeNPCs[npc].tileY === (player.tileY + dirY)) {
+                switchState(dialogue);
+                startDialogue(activeNPCs[npc]);
             }
         }
 
-        if (player.tileX === podium.tileX && player.tileY === podium.tileY) {
+        if (player.xPos === podium.xPos && player.yPos === podium.tileY*tileSize && currentLevel.name === "exterior") {
             switchState(dialogue);
             press = true;
             startDialogue(podium)
@@ -53,9 +62,8 @@ function keyPressed() {
     } 
 
     //IF IN TRANSITION STATE
-    else if (keyCode === controls.spacebar && gameState === transition) {
+    else if (keyCode === controls.spacebar && gameState === transition && !transitioning && currentTransitionText === start) {
         //END TRANSITION
-        console.log("Called from spacebar")
         setTransition(endTransition)
     }
 
@@ -71,7 +79,9 @@ function keyPressed() {
 
     //TOGGLES DEBUG DISPLAY FOR MAP
     if (keyCode === controls.slash) {
-        debug = !debug;
+        //debug = !debug;
+        currentTransitionText = win;
+        setTransition(startTransition)
     }
 
     //TOOGLES BETWEEN WALK AND DIALOGUE STATES FOR DEBUG

@@ -1,5 +1,5 @@
 playerStartX = 5;
-playerStartY = 2;
+playerStartY = 5;
 
 let player = {
     //Physical Properties
@@ -180,6 +180,11 @@ let player = {
                 this.isMoving = true;
             } 
             else if (tileRules[nextTileVertical][nextTileHorizontal] === 2) {
+                if (pressCompleted) {
+                    endGame(win);
+                    return;
+                }
+
                 loadLevel(levels[currentLevel.nextLevel])
             }
         }

@@ -44,10 +44,10 @@ function switchState(nextState) {
 
 
 let start = 0;
-let day1 = 1;
-let day2 = 2;
-let day3 = 3;
-let currentDay = start;
+let kicked = 1;
+let lose = 2;
+let win = 3;
+let currentTransitionText = start;
 
 function handleDayState() {
 
@@ -56,5 +56,5 @@ function handleDayState() {
 
 function endDay() {
     console.log("End day called")
-    currentDay++;
+    currentTransitionText++;
 }

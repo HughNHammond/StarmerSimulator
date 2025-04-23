@@ -6,6 +6,7 @@ let tileID = 0;
 
 
 let interior = {
+    name: "interior",
     tileRules: [
         //   0  1  2  3  4  5  6  7  8  9  10  
             [1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1], //0
@@ -19,13 +20,14 @@ let interior = {
             [1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1], //8
         ],
     backgroundImage: null,
-    activeNPCs: () => [streeting],
+    activeNPCs: () => [streeting, reeves, kendall],
     startX: 5,
     startY: 8,
     nextLevel: 1
 }
 
 let exterior = {
+    name: "exterior",
     tileRules: [
         //   0   1   2   3   4   5   6   7   8   9   10  
             [1,  1,  1,  1,  1,  2,  1,  1,  1,  1,  1], //0
@@ -54,6 +56,7 @@ function loadLevel(level) {
     currentLevel = level;
     tileRules = level.tileRules;
     activeNPCs = level.activeNPCs();
+    console.log(activeNPCs)
     player.xPos = level.startX * tileSize;
     player.yPos = level.startY * tileSize;
     backgroundImage = level.backgroundImage;

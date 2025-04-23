@@ -5,6 +5,7 @@ let activeNPCs = [];
 //CREATE SPECIFIC CHARACTERS
 let streeting; //name
 let reeves;
+let kendall;
 let streetingSprite; //sprite
 let mcsweeney;
 
@@ -21,20 +22,24 @@ function createNPCs() {
     streeting = new NPC("WES STREETING", streetingSprite, 3, 4, 0, active, true);
     npcs[streeting.characterID] = streeting;
 
-    reeves = new NPC("RACHEL REEVES", streetingSprite, 5, 0, 1, inactive, true)
+    reeves = new NPC("RACHEL REEVES", streetingSprite, 5, 3, 1, active, true)
     npcs[reeves.characterID] = reeves;
 
-    //mcsweeney = new NPC("MORGAN MCSWEENEY", streetingSprite, 6, 8, 2, active, true)
-    //npcs[mcsweeney.characterID] = mcsweeney;
+    kendall = new NPC("LIZ KENDALL", streetingSprite, 7, 4, 2, active, true)
+    npcs[kendall.characterID] = kendall
 
-    podium = new NPC("PODIUM", podiumSprite, 5, 5, 3, active, false)
+    mcsweeney = new NPC("MORGAN MCSWEENEY", null, null, null, 3, inactive, false)
+    npcs[mcsweeney.characterID] = mcsweeney;
+
+    podium = new NPC("PODIUM", podiumSprite, 5, 5, 4, active, false)
     npcs[podium.characterID] = podium;
 }
 
 function attachStartNodesToNPCs() {
     streeting.startNode = streetingDay1;
     reeves.startNode = reevesDay1;
-    //mcsweeney.startNode = exampleResponse;
+    kendall.startNode = kendallDay1;
+    mcsweeney.startNode = mcsweeneyCall1;
     podium.startNode = economySpeech;
 }
 

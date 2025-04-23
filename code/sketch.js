@@ -1,4 +1,4 @@
-let debug = false;
+let debug = false; // Activates debug display
 
 let startFont;
 
@@ -16,8 +16,12 @@ let backgroundImage;
 let interiorImage;
 let exteriorImage;
 
+let phoneCall = false; //if false, call dialgoue will start when game starts.
+let pressCompleted = false;
+
 function preload() {
 
+    //Player Sprites
     player.sprites = {
         up: [loadImage('art/characters/starmer/starmer_up_walk/starmer_up_walk0.png'), loadImage('art/characters/starmer/starmer_up_walk/starmer_up_walk1.png'), loadImage('art/characters/starmer/starmer_up_walk/starmer_up_walk2.png'), loadImage('art/characters/starmer/starmer_up_walk/starmer_up_walk3.png')],
         down: [loadImage('art/characters/starmer/starmer_down_walk/starmer_down_walk0.png'), loadImage('art/characters/starmer/starmer_down_walk/starmer_down_walk1.png'), loadImage('art/characters/starmer/starmer_down_walk/starmer_down_walk2.png'), loadImage('art/characters/starmer/starmer_down_walk/starmer_down_walk3.png')],
@@ -25,33 +29,39 @@ function preload() {
         right: [loadImage('art/characters/starmer/starmer_right_walk/starmer_right_walk0.png'), loadImage('art/characters/starmer/starmer_right_walk/starmer_right_walk1.png'),loadImage('art/characters/starmer/starmer_right_walk/starmer_right_walk2.png'),loadImage('art/characters/starmer/starmer_right_walk/starmer_right_walk3.png')],
     }
 
-    downArrow = loadImage("art/objects/DownArrow.png");
-    upArrow = loadImage("art/objects/UpArrow.png");
-
+    //NPC Sprites
     streetingSprite = loadImage("art/characters/streeting/streeting_down.png");
-
-    startFont = loadFont("font/PressStart2P.ttf")
-    startImage = loadImage("art/portraits/startImage.png")
-
-    dialogueFont = loadFont("font/Pixellari.ttf")
     podiumSprite = loadImage("art/objects/podium.png")
 
+    //Tilemap images
     interiorImage = loadImage("art/screens/Downing Street Interior.png");
     interior.backgroundImage = interiorImage;
     exteriorImage = loadImage("art/screens/Downing Street Exterior.png");
     exterior.backgroundImage = exteriorImage;
+
+    //Sprites for Dialogue System
+    downArrow = loadImage("art/objects/DownArrow.png");
+    upArrow = loadImage("art/objects/UpArrow.png");
+
+    //Opening Title Image
+    startImage = loadImage("art/portraits/startImage.png")
+
+    //Loading Fonts
+    startFont = loadFont("font/PressStart2P.ttf")
+    dialogueFont = loadFont("font/Pixellari.ttf")
 }
 
 function setup() {
 
-    noSmooth();
-    //Player Object created as object so not here
-    //fullscreen(true);
+    noSmooth(); //This turns off smoothing on images, which I don't want on pixel art
 
-    player.spriteDirection = player.sprites.down;
-    transitionState = waitTransition
-    switchState(transition)
+    //Set Starting States
+    player.spriteDirection = player.sprites.down; //Defaults player sprite to show down-facing sprite
+    transitionState = waitTransition //Skips fade-in on start screen transition
+    switchState(transition) //Sets game state to transition state
+    setWinText(); //Randomly determines what final message will display on win screen
 
+    //Creating the Canvas
     createCanvas(tilesX*tileSize, tilesY*tileSize)
 
 
@@ -60,37 +70,43 @@ function setup() {
     createDialogueEvents(); // creates Dialogue Nodes
     attachStartNodesToNPCs(); // attaches starting dialogue nodes to each NPC
 
+    //Set and load the first level!
     loadLevel(interior)
+
+    //Set Player Start Position (I want the player to start in a different position when the level is first loaded!)
     player.xPos = playerStartX * tileSize;
     player.yPos = playerStartY * tileSize;
 
+    //Modifies podium Y position so it does not appear in centre of pile (player therefore appears to stand behind it)
     podium.yPos += (tileSize/2);
-
 }
 
 function draw() {
 
-    background(255)
-    handlePlayState()
+    background(255) //Black background
+    handlePlayState() //Checks what state the game is currently in and runs approprate functions (see state.js)
 
+    //CHECK IF MAP SHOULD BE DRAWN IN CURRENT GAME STATE
     if (gameState === walk || gameState === dialogue || gameState === respond) {
         mapEnabledDraw();
     }
 
+    //CHECK IF DIALOGUE BOX/TEXT SHOULD BE DRAWN IN CURRENT GAME STATE
     if (gameState === dialogue || gameState === respond) {
         dialogueDraw();
     }
 
+    //Updates each frame for use in timer (see utilities.js)
     count++;
-
-    // if (keyIsDown(85)) {// b
-    //     drawDialogueBox();
-    // }
-
 }
 
 function mapEnabledDraw() {
-    //DISPLAY FUNCS
+
+    if (!transitioning && !phoneCall) {
+        switchState(dialogue);
+        startDialogue(mcsweeney);
+        phoneCall = true;
+    }
 
     //The => is called an arrow function. What it's doing here is creating a temporary variable called 'tile' (notice it's not
     //plural!), and saying "go inside the object in that variable and find a function calld display()". So when loopTilesAndRunFunc()
@@ -119,7 +135,7 @@ function displayCharacters() {
         if (activeNPCs[x] != undefined) {
             if (activeNPCs[x].active) {
                 activeNPCs[x].display();
-                //activeNPCs[x].displayName();
+                //activeNPCs[x].displayName(); // FOR DEBUGGING
             }
         }
     }
@@ -128,15 +144,6 @@ function displayCharacters() {
         if (player.tileY >= 6) {
             player.display();
         }
-    }
-}
-
-function timer(lastCount, timerEnd) {
-    if (count - lastCount >= timerEnd) {
-        return true;
-    }
-    else {
-        return false;
     }
 }
 

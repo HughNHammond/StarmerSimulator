@@ -8,3 +8,12 @@ function setValueChange(value, change) {
     target.v = value;
     target.c = change;
 }
+
+function timer(lastCount, timerEnd) {
+    if (count - lastCount >= timerEnd) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}

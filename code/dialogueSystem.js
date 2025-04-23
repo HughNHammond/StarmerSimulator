@@ -15,18 +15,20 @@ let currentEvent;
 let currentNode;
 let currentIndex;
 let currentSelection = 0;
+let press;
+let allowEndSpeech = false;
 
 //EVENTS
+let mcsweeneyCall1 = [];
 let streetingDay1 = [];
 let reevesDay1 = [];
-let economySpeed = [];
+let kendallDay1 = [];
+let economySpeech = [];
 let econSpeechResponses = [];
 
 //IMPORTANT STRINGS
 let end = "end";
 let reporter = "REPORTER"
-
-
 
 function createDialogueEvents() {
 
@@ -45,38 +47,81 @@ function createDialogueEvents() {
         it would be called when the code starts and the object is created, not when called in my script.
     */
 
+    mcsweeneyCall1 = [
+        {label: "mcsweeney1", speaker: "PHONE", dialogue: "*ring ring, ring ring*"},
+        {label: "mcsweeney2", speaker: "PHONE", dialogue: "Morgan McSweeney is calling you...", style: ITALIC,
+            response: [
+                {r: "Answer the phone.", goTo: "mcsweeney3"},
+                {r: "Answer the phone.", goTo: "mcsweeney3"},
+                {r: "Answer the phone.", goTo: "mcsweeney3"},
+                {r: "Answer the phone.", goTo: "mcsweeney3"},
+                {r: "Answer the phone.", goTo: "mcsweeney3"},
+                {r: "Answer the phone.", goTo: "mcsweeney3"},
+                {r: "Answer the phone.", goTo: "mcsweeney3"},
+                {r: "Answer the phone.", goTo: "mcsweeney3"},
+            ]
+        },
+        {label: "mcsweeney3", speaker: mcsweeney.name, dialogue: "Good Morning, Keir."},
+        {label: "mcsweeney4", speaker: mcsweeney.name, dialogue: "We've had a rough landing, but today that all changes."},
+        {label: "mcsweeney5", speaker: mcsweeney.name, dialogue: "It's time for a re-launch."},
+        {label: "mcsweeney6", speaker: mcsweeney.name, dialogue: "Again."},
+        {label: "mcsweeney7", speaker: mcsweeney.name, dialogue: "We have to show the public we're the party that can fix Britain, that has their interests at heart."},
+        {label: "mcsweeney8", speaker: mcsweeney.name, dialogue: "And that all starts with the press."},
+        {label: "mcsweeney9", speaker: mcsweeney.name, dialogue: "Speak to your advisors and figure out what you're going to say today."},
+        {label: "mcsweeney10", speaker: mcsweeney.name, dialogue: "Remember: we have to show the public that we're serious, sensible and can make tough decisions."},
+        {label: "mcsweeney11", speaker: mcsweeney.name, dialogue: "Liz's new scheme will help see of this nonsense about us hating disabled people."},
+        {label: "mcsweeney12", speaker: mcsweeney.name, dialogue: "And the NHS plans have to be announced."},
+        {label: "mcsweeney13", speaker: mcsweeney.name, dialogue: "If things get dicey, take Wes's advice."},
+        {label: "mcsweeney14", speaker: mcsweeney.name, dialogue: "I'll be watching."},
+        {label: "mcsweeney15", speaker: mcsweeney.name, dialogue: "SO DON'T FUCK IT UP.",
+            response: [
+                {r: "I won't, sir.", goTo: "mcsweeney16"},
+                {r: "I won't, sir.", goTo: "mcsweeney16"},
+                {r: "I won't, sir.", goTo: "mcsweeney16"},
+                {r: "I won't, sir.", goTo: "mcsweeney16"},
+                {r: "I won't, sir.", goTo: "mcsweeney16"},
+                {r: "I won't, sir.", goTo: "mcsweeney16"},
+                {r: "I won't, sir.", goTo: "mcsweeney16"},
+                {r: "I won't, sir.", goTo: "mcsweeney16"},
+            ]
+        },
+        {label: "mcsweeney16", speaker: mcsweeney.name, dialogue: "Good boy. When you're ready, head outside and press SPACE BAR at the podium."},
+    ]
 
     streetingDay1 = [
         {label: "streeting1", speaker: streeting.name, dialogue: "Good morning Prime Minister. If you want my advice..."},
-        {label: "streeting2", speaker: streeting.name, dialogue: "Have you considered being inexpilcably racist?",
+        {label: "streeting2", speaker: streeting.name, dialogue: "My new NHS plan will really help with this re-launch."},
+        {label: "streeting3", speaker: streeting.name, dialogue: "But you know how dumb the public can be."},
+        {label: "streeting4", speaker: streeting.name, dialogue: "If that doesn't work..."},
+        {label: "streeting5", speaker: streeting.name, dialogue: "Have you considered being inexplicably transphobic?",
             response: [
-                {r: "Where's Rachel?", goTo: "reevesTrigger1", func: () => activateNPC(reeves)},
+                {r: "I was thinking about being racist instead.", goTo: "streeting6"},
                 {r: "Uhhh... thank you Wesley.", goTo: end}
             ]
         },
-        {label: "reevesTrigger1", speaker: streeting.name, dialogue: "Look, she's just come in. She's looking....."}
+        {label: "streeting6", speaker: streeting.name, dialogue: "You make me proud to be a member of this party."}
     ]
 
     reevesDay1 = [
         {label: "reeves1", speaker: reeves.name, dialogue: "..."},
         {label: "reeves2", speaker: reeves.name, dialogue: "..............."},
         {label: "reeves3", speaker: reeves.name, dialogue: ".................................. gggggg"},
-        {label: "reeves4", speaker: reeves.name, dialogue: "grrrrrrrrrrwwwwwwwwwwwwooooooooo OOOOOOOTTTTTTTTTTTTTHHHHHHHHHH HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH."}
+        {label: "reeves4", speaker: reeves.name, dialogue: "ggggggrrrrrrrrrrwwwwwwwwwwooooooo OOOOOOOTTTTTTTTTTTTTHHHHHHHHHH HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH."}
     ]
 
-    anotherEvent = [
-        {label: "anotherEvent", speaker: "Streeting", dialogue: "Let's test if I can say this now!"}
+    kendallDay1 = [
+        {label: "kendall1", speaker: kendall.name, dialogue: "My new 'Get Up, Get Out' scheme will fix everything!"},
+        {label: "kendall2", speaker: kendall.name, dialogue: "You must announce it today!"},
     ]
-
 
     econSpeechResponses = [               
-        {r: "Address disability cuts.", goTo: "disability1"},
-        {r: "Empathsise with the public", goTo: "empathy1"},
+        {r: "Announce the 'Get Up, Get Out' scheme.", goTo: "disability1"},
+        {r: "Empathise with the public", goTo: "empathy1"},
         {r: "Propose a small wealth tax", goTo: "wealth1"},
         {r: "Announce policies to fix the NHS", goTo: "NHS1"},
         {r: "Address the housing crisis", goTo: "housing1"},
         {r: "Be inexplicably racist", goTo: "racism"},
-        {r: "Pledge to actually address wealth inequality", goTo: "gameOver"}
+        {r: "Pledge to actually address wealth inequality", goTo: "left1"}
     ]
 
     economySpeech = [
@@ -105,8 +150,10 @@ function createDialogueEvents() {
         {label: "disability12", speaker: player.name, dialogue: "I saw workers stretch key muscle groups reaching for packages on a high shelf.", func: () => player.modifyPressRating(5, 10)},
         {label: "disability13", speaker: player.name, dialogue: "I saw workers gaining muscle mass rushing around the warehouse at break-necks speeds."},
         {label: "disability14", speaker: player.name, dialogue: "Oh, uh, I thought we cut that line."},
-        {label: "disability15", speaker: reporter, dialogue: "Keir Starmer announces his empathetic plan to disabled workers back to work. Say what you like about the man,"},
-        {label: "Disability16", speaker: reporter, dialogue: "But this is a sensible and proportional plan that I can't find any fault in.", func: () => player.modifyPressRating(15, 20), response: econSpeechResponses},
+        {label: "disability15", speaker: player.name, dialogue: "I saw workers developing their fine motor skills by peeing in bottles instead of wasting time on toilet breaks."},
+        {label: "disability16", speaker: player.name, dialogue: "I used to pee in bottles, but my wife doesn't let me anymore."},
+        {label: "disability17", speaker: player.name, dialogue: "But that doesn't mean disabled people can't pee in bottles, and it is the Labour Party who has the courage to let them."},
+        {label: "Disability18", speaker: reporter, dialogue: "Well, that clears up any moral issues for me!", func: () => player.modifyPressRating(15, 20), response: econSpeechResponses},
 
         //EMPATHISE WITH PUBLIC
         //{label: "empathy1", speaker: player.name, dialogue: ""}
@@ -116,21 +163,70 @@ function createDialogueEvents() {
         {label: "empathy4", speaker: player.name, dialogue: "I am right there, struggling with you."},
         {label: "empathy5", speaker: player.name, dialogue: "Last week, my wife and I came to the decision that we would have to make sacrifices in our own food budget."},
         {label: "empathy6", speaker: player.name, dialogue: "The wreckless spending of the Conservative Party means that Waitrose is now simply too expensive for us."},
-        {label: "empathy7", speaker: player.name, dialogue: "Instead, we would have been forced to buy food from the Sainsbury's Taste The Difference range.", func: () => player.modifyPressRating(-10, -20)},
+        {label: "empathy7", speaker: player.name, dialogue: "Instead, we would have been forced to buy food from the Sainsbury's Taste The Difference range.", func: () => player.modifyPressRating(-5, -10)},
         {label: "empathy8", speaker: player.name, dialogue: "Luckily, my son picked up a local paper route and mowed some neighbours lawns so we could keep going to Waitrose."},
         {label: "empathy9", speaker: player.name, dialogue: "Why don't you see if you can get a local paper route, or see if your neighbours need their lawn mowing?"},
         {label: "empathy10", speaker: player.name, dialogue: "If we all did that, we could all go to Waitrose, which I think would be fun."},
-        {label: "empathy11", speaker: reporter, dialogue: "Terrifying news from Westminster as PM suggests I do manual labour.", func: () => player.modifyPressRating(-10, -20), response: econSpeechResponses},
+        {label: "empathy11", speaker: reporter, dialogue: "Terrifying news from Westminster as PM suggests I do manual labour.", func: () => player.modifyPressRating(-5, -10), response: econSpeechResponses},
 
         //PROPOSE A SMALL WEALTH TAX
         //{label: "wealth1", speaker: player.name, dialogue: " "},
         {label: "wealth1", speaker: player.name, dialogue: "When the Labour Party formed this government, we told you that there were tough times ahead."},
+        {label: "wealth2", speaker: player.name, dialogue: "Everyone has to pitch in. That means we will be propsing a small wealth tax."},
+        {label: "wealth3", speaker: player.name, dialogue: "Those in the highest tax bracket will have their tax rate increased by 0.00001%.", func: () => player.modifyPressRating(-20, -20)},
+        {label: "wealth4", speaker: reporter, dialogue: "Mr Prime Minister! This just in from Laura Kuenssberg: apparently every millionaire is now leaving the country, including Laura Kuenssberg!"},
+        {label: "wealth5", speaker: player.name, dialogue: "Oh uhhhh, forget that, we're not doing that. That was just me being my usual funny self!"},
+        {label: "wealth6", speaker: player.name, dialogue: "Haw haw haw."},
+        {label: "wealth7", speaker: player.name, dialogue: "Growth.", func: () => player.modifyPressRating(15, 20), response: econSpeechResponses},
+
+        //FIX THE NHS
+        //{label: "NHS1", speaker: player.name, dialogue: " "},
+        {label: "NHS1", speaker: player.name, dialogue: "Britain led the way in technology. It was a Scotsman who invented the telephone. An Englishman invented the World Wide Web."},
+        {label: "NHS2", speaker: player.name, dialogue: "And the Welsh are also here."},
+        {label: "NHS3", speaker: reporter, dialogue: "What's a Welsh?", func: () => player.modifyPressRating(-2, -5)},
+        {label: "NHS4", speaker: player.name, dialogue: "The Labour Party will invest funds into AI to ensure that British ingenuity is at the forefront of our global technological future."},
+        {label: "NHS5", speaker: player.name, dialogue: "From today, instead of relying on Doctors, the British public can simply ask a chatbot what to do in a medical emergency."},
+        {label: "NHS6", speaker: player.name, dialogue: "The technology will allow patients to write in their symptoms, and then it will create a user-directed treatment plan."},
+        {label: "NHS7", speaker: player.name, dialogue: "Trials have shown this technology works with 32% accuracy, an astonishing result."},
+        {label: "NHS8", speaker: player.name, dialogue: "Where possible, it will help patients look after themselves from home."},
+        {label: "NHS9", speaker: player.name, dialogue: "The program can help you create simple remedies from household items like honey and bleach,"},
+        {label: "NHS10", speaker: player.name, dialogue: "to directing patients to their nearest funeral parlour so they can arrive prompty upon their death."},
+        {label: "NHS11", speaker: player.name, dialogue: "It will even give you instructions on how to perform life-saving surgeries on to perform life-saving surgeries on yourself."},
+        {label: "NHS1", speaker: player.name, dialogue: "The possibilities are amazing. All that money wasted on surgeons and nurses, back in the British Public's hands.", func: () => player.modifyPressRating(10, 15), response: econSpeechResponses},
         
+        //ADDRESS HOUSING CRISIS
+        //{label: "housing1", speaker: player.name, dialogue: " "},
+        {label: "housing1", speaker: player.name, dialogue: "We pledged to get Britain building again. We would make a country of builders, not blockers."},
+        {label: "housing2", speaker: player.name, dialogue: "I told the British public that I would take on the NIMBYs to get shovels in the ground and cranes in the sky."},
+        {label: "housing3", speaker: player.name, dialogue: "But woke left NIMBYs are already looking at our planning bill and asking questions like:", func: () => player.modifyPressRating(5, 10)},
+        {label: "housing4", speaker: player.name, dialogue: '"Why would private housing companies deliberately devalue their assets by building more houses?"'},
+        {label: "housing5", speaker: player.name, dialogue: 'My answer to this is "because construction CEOs are actually very nice people".'},
+        {label: "housing6", speaker: player.name, dialogue: "One bought me this suit. It's very nice."},
+        {label: "housing7", speaker: player.name, dialogue: "I can ask him if he'll get you one if you like."},
+        {label: "housing8", speaker: reporter, dialogue: "He's talking about my Dad <3", func: () => player.modifyPressRating(10, 15)},
+        {label: "housing8", speaker: "OTHER REPORTERS", dialogue: "Awwwwww...", response: econSpeechResponses},
+
+        //BE INEXPLICABLY RACIST
+        {label: "racism", speaker: player.name, dialogue: "[Author's Note: I ain't writing this.]", func: () => player.modifyPressRating(100, 100), response: econSpeechResponses},
+
+        //ADRDRESS WEALTH INEQUALITY
+        {label: "left1", speaker: player.name, dialogue: "This is... None of this will work. We need to actually improve peoples lives, address the injustices of an ecoonomy built on the exploitation of labour...", func: () => endGame(kicked)},
+
+        //End Speech
+        {label: "end1", speaker: player.name, dialogue: "Sacrifices must be made, but it is necessary to build Britain back bett- I mean to get Britain's future back, together.", func: () => setPressCompletedToTrue()},
     ]
 }
 
+//------------------------SPECIFIC DIALOGUE FUNCTIONS--------------------------//
 
-//-----------------------UPDATE DIALOGUE FUNCTIONS-----------------------------//
+function handleEndSpeechChoice() {
+    if (!allowEndSpeech) {
+        econSpeechResponses[econSpeechResponses.length] = {r: "[END SPEECH]", goTo: "end1"};
+        allowEndSpeech = true;
+    }
+}
+
+//-----------------FUNCTIONS FOR GENERAL DIALOGUE UPDATING---------------------//
 
 //HANDLE DIALOGUE NODES – Called when player clicks to change current dialogue
 function updateDialogue() {
@@ -149,6 +245,13 @@ function updateFromDialogueNode() { //Checks if node has any code to run and che
     //Checks if dialogue has function inside it
     if (currentNode.func != undefined) currentNode.func();
     
+    if (player.pressRating <= 0) {
+        endGame(lose);
+        switchState(transition);
+        return;
+    }
+
+    if (gameState === transition) return;
 
     if (currentNode.response != undefined) {
         currentSelection = 0;
@@ -176,6 +279,9 @@ function updateFromDialogueNode() { //Checks if node has any code to run and che
 }
 
 function updateFromResponseNode() {
+
+    if (press) handleEndSpeechChoice();
+    
     if (currentNode.response[currentSelection].func != undefined) { currentNode.response[currentSelection].func(); };
 
     //... END DIALOGUE IF NO NEXT NODE
@@ -241,9 +347,12 @@ function drawDialogueBox() {
     }
 
 
-    stroke(5, 93, 169); //labour blue
-    strokeWeight(10);
-    fill(228, 0, 59); //labour red
+        stroke(5, 93, 169); //labour blue
+        strokeWeight(10);
+        fill(228, 0, 59); //labour red;
+
+    
+    
 
     rect(boxOriginX, boxOriginY, boxSizeX, boxSizeY, cornerRadius);
 
@@ -266,6 +375,10 @@ function displayRatings(boxOriginX, boxSizeX, cornerRadius) {
     let perfBoxOriginX = boxOriginX + tileSize;
     let perfBoxOriginY = (tileSize * 7.5 + 10);
     let perfBoxSizeY = tileSize * 1.5;
+    
+    stroke(5, 93, 169); //labour blue
+    strokeWeight(10);
+    fill(228, 0, 59); //labour red;
 
     rect(perfBoxOriginX, perfBoxOriginY, boxSizeX - (tileSize * 2), perfBoxSizeY, cornerRadius);
 
@@ -308,13 +421,16 @@ function drawDialogueText(boxSizeX, boxSizeY, textOriginX, textOriginY, boxTextP
     stroke(255, 131, 131);
     fill(255, 255, 255);
     textAlign(LEFT);
-    textStyle("bold");
+    textStyle(BOLD);
     text(currentNode.speaker, textOriginX, textOriginY, boxSizeX - (boxTextPadding * 1.5), boxSizeY - boxTextPadding);
-    textStyle("normal");
+    
+    if (currentNode.style != undefined) textStyle(currentNode.style)
+    else textStyle(NORMAL);
     text(currentNode.dialogue, textOriginX, textOriginY + 40, boxSizeX - (boxTextPadding * 1.5), boxSizeY - boxTextPadding);
 }
 
 function drawResponseText(boxOriginX, boxOriginY, boxSizeX, boxSizeY, textOriginX, textOriginY, cornerRadius) {
+
 
     //Clamps current selection so cannot exceed number of responses
     currentSelection = clamp(currentSelection, 0, currentNode.response.length - 1);
@@ -384,19 +500,14 @@ function drawResponseText(boxOriginX, boxOriginY, boxSizeX, boxSizeY, textOrigin
 
 //Draw Loop
 function dialogueDraw() { //draw function for dialogue
-    drawDialogueBox();
 
     textFont(dialogueFont) //Sets font for dialogue
+    drawDialogueBox();
+}
 
-    // //CODE TO CHECK HOW TO DRAW TEXT
-    // if (gameState === dialogue) {
-    //     drawText(); //Draw NPC dialogue
-    // }
-    // else if (gameState === respond) {
-    //     drawResponse(); //Create dialogue selection menu
-    // }
 
-    // if (press) {
-    //     drawPerformanceBox()
-    // }
+//-----------------------ONE TIME FUNCTIONS--------------------//
+
+function setPressCompletedToTrue() {
+    pressCompleted = true;
 }
