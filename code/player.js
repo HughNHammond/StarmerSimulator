@@ -61,7 +61,7 @@ let player = {
     },
 
     modifyPublicRating: function() {
-        let publicChange = Math.round(random(-20, 20));
+        let publicChange = Math.round(random(-5, 5));
 
         this.nextPublicRating = this.publicRating + publicChange;
     },
