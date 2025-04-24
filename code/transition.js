@@ -65,10 +65,7 @@ function handleTransition() {
             case transitionToBlack:
                 transitioning = true;
                 handleFade(-transitionChange)
-                fill (0, 0, 0, fade)
-                rect(0, 0,width, height)
                 if (fade <= 0) {
-                    console.log("active!")
                     endTransition = false;
                     transitioning = false;
                     currentTransitionText = start;
@@ -80,10 +77,7 @@ function handleTransition() {
                     console.log(fade)
                     transitioning = true;
                     handleFade(+transitionChange)
-                    fill (0, 0, 0, fade)
-                    rect(0, 0, width, height)
                     if (fade >= 255) {
-                        console.log("transitoinfinished!")
                         endTransition = false;
                         transitioning = false;
                         currentTransitionText = start;
@@ -165,15 +159,15 @@ function getTransitionText() {
 
         case controlsScreen:
 
-            //fill(0, 0, 0, fade);
-            //rect(0, 0, width, height);
+            fill(0, 0, 0, fade);
+            rect(0, 0, width, height);
 
             fill(228, 0, 59,fade)
             textFont(startFont)
             textAlign(CENTER);
             textSize(50)
             text("CONTROLS", width/2, 125);
-            
+            tint(255, fade)
             noSmooth();
             image(wsad, width*0.15, 150, 200, 200)
             textAlign(CENTER)
