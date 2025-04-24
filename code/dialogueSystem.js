@@ -170,7 +170,7 @@ function createDialogueEvents() {
         {label: "disability7", speaker: player.name, dialogue: "This has shocked some members of the public, but we will not listen to those who wish to exclude the disabled from economic life."},
         {label: "disability8", speaker: player.name, dialogue: "Why give out benefits when there are the benefits of work? Haw haw haw."},
         {label: "disability9", speaker: player.name, dialogue: "We have partnered with Amazon, who will be delivering the new 'Get up, Get Out' program, helping disabled people find work at Amazon Warehouses."},
-        {label: "disability10", speaker: player.name, dialogue: "Last week, I visited an Amazon warehouse and I realised something."},
+        {label: "disability10", speaker: player.name, dialogue: "Last week, I visited an Amazon Fulfilment Centre and I realised something."},
         {label: "disability11", speaker: player.name, dialogue: "Working in an Amazon Warehouse isn't just gruelling physical labour, it can also be a great form of physio therapy.", func: () => player.modifyPressRating(5, 10)},
         {label: "disability12", speaker: player.name, dialogue: "I saw workers stretch key muscle groups reaching for packages on a high shelf.", func: () => player.modifyPressRating(5, 10)},
         {label: "disability13", speaker: player.name, dialogue: "I saw workers gaining muscle mass rushing around the warehouse at break-necks speeds."},
