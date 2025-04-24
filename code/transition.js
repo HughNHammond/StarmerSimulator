@@ -12,7 +12,10 @@ let transparency = 0;
 let transitionState;
 let startTransition = 0
 let waitTransition = 1
-let endTransition = 2;
+let transitionToControls = 2;
+let transitionToBlack = 3;
+let transitionFromBlack = 4;
+let endTransition = 5;
 
 
 
@@ -27,10 +30,14 @@ let winTextIndex;
 
 
 function handleTransition() {
+    console.log(transitionState)
     switch (transitionState) {
         case startTransition:
             transitioning = true;
-            mapEnabledDraw(); //KEEPS MAP FOR TRANSITION
+            if (currentTransitionText != controlsScreen) {
+                mapEnabledDraw(); //KEEPS MAP FOR TRANSITION
+            }
+
             handleFade(transitionChange);
     
             if (fade >= 255) {
@@ -42,6 +49,47 @@ function handleTransition() {
             transitioning = false;
             fade = 255;
             break;
+
+        case transitionToControls:
+            transitioning = true;
+            handleFade(-transitionChange)
+            if (fade <= 0) {
+                console.log("active!")
+                endTransition = false;
+                transitioning = false;
+                currentTransitionText = controlsScreen;
+                setTransition(startTransition)
+            }
+            break;
+
+            case transitionToBlack:
+                transitioning = true;
+                handleFade(-transitionChange)
+                fill (0, 0, 0, fade)
+                rect(0, 0,width, height)
+                if (fade <= 0) {
+                    console.log("active!")
+                    endTransition = false;
+                    transitioning = false;
+                    currentTransitionText = start;
+                    setTransition(transitionFromBlack)
+                }
+                break;
+                
+                case transitionFromBlack:
+                    console.log(fade)
+                    transitioning = true;
+                    handleFade(+transitionChange)
+                    fill (0, 0, 0, fade)
+                    rect(0, 0, width, height)
+                    if (fade >= 255) {
+                        console.log("transitoinfinished!")
+                        endTransition = false;
+                        transitioning = false;
+                        currentTransitionText = start;
+                        setTransition(waitTransition)
+                    }
+                    break;
 
         case endTransition:
             transitioning = true;
@@ -95,20 +143,45 @@ function getTransitionText() {
             fill(0, 0, 0, fade);
             rect(0, 0, width, height);
         
-            textSize(45),
+            textSize(50),
             fill(228, 0, 59, fade)
             textStyle(BOLD)
             text("STARMER", width/2, height/2+130)
             text("SIMULATOR", width/2, height/2+180)
             textStyle(NORMAL)
+            
+            fill(150, fade)
+            textSize(15);
+            text("Press C for CONTROLS", width/2, height/2+215)
             textSize(17)
-            text("Press the space bar to begin", width/2, height/2+220)
+            text("Press SPACE BAR to START GAME", width/2, height/2+240)
             
             tint(255, fade)
             imageMode(CENTER)
             image(startImage, width/2, 180, 550, 300)
             noTint();
             imageMode(CORNER)
+            break;
+
+        case controlsScreen:
+
+            //fill(0, 0, 0, fade);
+            //rect(0, 0, width, height);
+
+            fill(228, 0, 59,fade)
+            textFont(startFont)
+            textAlign(CENTER);
+            textSize(50)
+            text("CONTROLS", width/2, 125);
+            
+            noSmooth();
+            image(wsad, width*0.15, 150, 200, 200)
+            textAlign(CENTER)
+            textSize(15)
+            text("Move \n\n Navigate Dialogue", width*0.5, 240, 300, 100)
+            image(spacebarSprite, width*0.15, 320, 200, 200)
+            text("Interact With NPCs/Podium \n\n Select Dialogue Option", width*0.5, 390, 300, 100)
+
             break;
 
         case kicked:

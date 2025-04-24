@@ -44,9 +44,11 @@ function switchState(nextState) {
 
 
 let start = 0;
-let kicked = 1;
-let lose = 2;
-let win = 3;
+let controlsScreen = 1;
+let kicked = 2;
+let lose = 3;
+let win = 4;
+
 let currentTransitionText = start;
 
 function handleDayState() {

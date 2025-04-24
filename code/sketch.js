@@ -44,9 +44,11 @@ function preload() {
     exteriorImage = loadImage("art/screens/Downing Street Exterior.png");
     exterior.backgroundImage = exteriorImage;
 
-    //Sprites for Dialogue System
+    //UI
     downArrow = loadImage("art/objects/DownArrow.png");
     upArrow = loadImage("art/objects/UpArrow.png");
+    wsad = loadImage("art/objects/WSAD.png");
+    spacebarSprite = loadImage("art/objects/spacebar.png")
 
     //Opening Title Image
     startImage = loadImage("art/portraits/startImage.png")
@@ -86,7 +88,7 @@ function setup() {
 
 function draw() {
 
-    background(255) //Black background
+    background(0) //Black background
     handlePlayState() //Checks what state the game is currently in and runs approprate functions (see state.js)
 
     //CHECK IF MAP SHOULD BE DRAWN IN CURRENT GAME STATE

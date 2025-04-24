@@ -12,7 +12,8 @@ let controls = {
     //Debug
     shift: 16,
     slash: 191,
-    f: 70
+    f: 70,
+    c: 67
 }
 
 function keyPressed() {
@@ -62,9 +63,12 @@ function keyPressed() {
     } 
 
     //IF IN TRANSITION STATE
-    else if (keyCode === controls.spacebar && gameState === transition && !transitioning && currentTransitionText === start) {
-        //END TRANSITION
-        setTransition(endTransition)
+    else if (gameState === transition && !transitioning && currentTransitionText === start) {
+        if (keyCode === controls.spacebar) setTransition(endTransition);
+        else if (keyCode === controls.c) setTransition(transitionToControls)
+    }
+    else if (keyCode === controls.c && gameState === transition && !transitioning && currentTransitionText === controlsScreen) {
+        setTransition(transitionToBlack)
     }
 
     if (gameState === respond) {
