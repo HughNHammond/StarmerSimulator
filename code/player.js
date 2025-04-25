@@ -1,22 +1,25 @@
+//INTIALISE VARIABLES
+
+ //location to start player when loading a level
 playerStartX = 5;
 playerStartY = 5;
 
+//Player object
 let player = {
-    //Physical Properties
-    name: "STARMER",
-    spriteIndex: 0,
+    name: "STARMER", //to display in dialogue
+
+    //Sprite info
+    spriteIndex: 0, //index of sprite to currently show from sprites array
     sprites: null, //array containing all the sprites for a character
-    spriteDirection: null,
-    animateWalk: false,
+    spriteDirection: null, //determines which sprite to display to show the direction the player is facing
+    animateWalk: false, //turns to true when walk animation should play (i.e. when walking)
+    tileSize: tileSize, //local reference for tilesize
+    size: tileSize, //local reference for sprite size
 
-
-    tileSize: tileSize,
-    size: tileSize,
-
-    //Position
-    tileX: playerStartX,
-    tileY: playerStartY,
-    xPos: playerStartX * tileSize,
+    //Player Position Data
+    tileX: playerStartX, 
+    tileY: playerStartY, 
+    xPos: playerStartX * tileSize, 
     yPos: playerStartY * tileSize,
     tx: null,
     ty: null,
@@ -27,46 +30,51 @@ let player = {
     dirY: 0,
     speed: 6, //must be a factor (i.e. divisible by) tileSize.
 
-    //RATINGS
-    pressRating: 50,
-    publicRating: 40,
-
-    nextPressRating: 50,
-    nextPublicRating: 40,
+    //RATINGS (for press ratings and public rating systems)
+    pressRating: 50, //actual value
+    publicRating: 40, //actual value
+    nextPressRating: 50, //used to create the moving bar when rating goes up or down
+    nextPublicRating: 40, //used to create the moving bar when rating goes up or down
 
     draw: function() {
+        //Called from draw() in sketch.js to run anything I want to call from draw every frame
         player.display();
         player.handleRating();
-        //player.displayName(); //for Debug
+        if (debug) player.displayName(); //for Debug
     },
 
     display: function() {
+        //Display sprite
         image(this.spriteDirection[this.spriteIndex], this.xPos, this.yPos, this.size, this.size);
     },
 
     displayName: function() {
+        //Display character name (used in debug)
         textFont(dialogueFont)
         fill("black");
         textSize(10);
         textAlign(CENTER);
         textStyle(NORMAL);
         noStroke();
-        text(this.name, this.xPos + tileSize/2, this.yPos - 2);
+        text(this.name, this.xPos + this.tileSize/2, this.yPos - 2);
     },
 
     modifyPressRating: function(pressMin, pressMax) {
+        //This function calculate a value in a random range and adds it to nextPressRating
         let pressChange = Math.round(random(pressMin, pressMax + 1));
-
         this.nextPressRating = this.pressRating + pressChange;
     },
 
     modifyPublicRating: function() {
+    //This function calculate a value in a random range and adds it to nextPublicRating
         let publicChange = Math.round(random(-5, 5));
-
         this.nextPublicRating = this.publicRating + publicChange;
     },
 
     handleRating: function() {
+        //Called every frame, this function checks if there's a difference between rating and nextRating values, 
+        //then adds or subtracts 1 from rating until it is the same as nextRating
+
         if (this.pressRating != this.nextPressRating) {
             if (this.pressRating < this.nextPressRating) {
                 this.pressRating++;
@@ -180,17 +188,18 @@ let player = {
                 this.isMoving = true;
             } 
             else if (tileRules[nextTileVertical][nextTileHorizontal] === 2) {
-                if (pressCompleted) {
+                if (pressCompleted) { //Checks if speech has concluded and ends the game upon leaving outside Number 10
                     endGame(win);
                     return;
                 }
-
+                //else just load the next level!
                 loadLevel(levels[currentLevel.nextLevel])
             }
         }
     },
 
     move: function() {
+        //Stores previous xPos and yPos in variable to compare if any change has occurred for animation
         let lastXPos = this.xPos;
         let lastYPos = this.yPos;
 
@@ -211,21 +220,24 @@ let player = {
             }
         }
 
+        //Move the player if there is a diference between pos and lastPos
         if (lastXPos != this.xPos || lastYPos != this.yPos) {
             this.animateWalk = true;
         }
         else {
+            //otherwise, don't animate teh sprite and default to the sprite at index 0 in the array (default standing sprite)
             this.animateWalk = false;
             this.spriteIndex = 0;
         }
     },
 
     animateSprite: function() {
+        //Animation function, sets timer and then checks if a certain amoutn of time has passsed. If it has, it loads the next sprite.
         if (this.animateWalk) {
             if (count - lastCount >= timerMax) {
                 lastCount = count;
                 this.spriteIndex++;
-                if (this.spriteIndex >= this.spriteDirection.length) this.spriteIndex = 0; //this checks if this.spriteIndex is bigger than the direciotn array
+                if (this.spriteIndex >= this.spriteDirection.length) this.spriteIndex = 0; //this checks if this.spriteIndex is bigger than the direction array length. If it is, reset to 0.
             }
         }
         else { //if this.animation = false, it sets our sprite back to 0.

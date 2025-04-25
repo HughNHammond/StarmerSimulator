@@ -548,7 +548,7 @@ function drawResponseText(boxOriginX, boxOriginY, boxSizeX, boxSizeY, textOrigin
         if (page === 0) num = x; //sets NUM to whatever iteration of the FOR loop we are on
         else num = x + 4; //sets NUM to the current iteration of the FOR loop + 4 as we are on second page
 
-        //fill(255, 255, 255) //TEMP FILL
+        //Handle displaying response node text
         textSize(20)
         textStyle("bold")
         textAlign(LEFT)

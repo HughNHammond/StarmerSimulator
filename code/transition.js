@@ -1,12 +1,9 @@
 //INTIALISED VARIABLES
 
-//V
+//Values to handle transparency for fade
 let fade = 0;
-//let transitionInProgress = false;
-let noTransparency = 255;
-let transitionChange = 10;
-let transitioning = false;
-let transparency = 0;
+let transitionChange = 10; //how much to iterate transparency per frame to create fade in/fade out effect
+let transitioning = false; //bool to check if transitioning is currently happen (used in controls.js to disable input!)
 
 //Transition State Machine
 let transitionState;
@@ -18,7 +15,17 @@ let transitionFromBlack = 4;
 let endTransition = 5;
 
 
+//State machine to control which content to show on screen when in transition gameState.
+let start = 0;
+let controlsScreen = 1;
+let kicked = 2;
+let lose = 3;
+let win = 4;
 
+let currentTransitionText = start; //Currently displayed value in currentTransitioNText, defaults to start on intitialisation
+
+
+//Array of winText to display on win screen, a random one is picked
 let winText = [
     "The University of York estimates 57,000 people died due to austerity cuts.\nHow many more will die due Labour's disability cuts?",
     "The Labour Party refuses to remove the two-child benefit cap. Child Poverty Action Group estimates 10,000 more children live in poverty since Labour's election.",
@@ -26,64 +33,68 @@ let winText = [
     "You feel nothing."
 ]
 
-let winTextIndex;
+let winTextIndex; //Index of the value used generated to select which winText element to display
 
 
 function handleTransition() {
-    console.log(transitionState)
+    //This functions handles switching between transition states
     switch (transitionState) {
-        case startTransition:
-            transitioning = true;
-            if (currentTransitionText != controlsScreen) {
-                mapEnabledDraw(); //KEEPS MAP FOR TRANSITION
+        case startTransition: //transition to fade in
+
+            transitioning = true; //sets transitioning to true to stop certain inputs in controls.js
+
+            if (currentTransitionText != controlsScreen) { //if not on control screen...
+                mapEnabledDraw(); //Keep map loaded so it appears behind the transition box
             }
 
-            handleFade(transitionChange);
+            handleFade(transitionChange); //fades screen in
     
             if (fade >= 255) {
-                transitionState = waitTransition;
+                transitionState = waitTransition; //when fade = 255 (maximum alpha value), switch to the waitTransitoin state
             }
             break;
 
         case waitTransition:
-            transitioning = false;
-            fade = 255;
+            //Stay in transition state but don't fade in or out
+            transitioning = false; //allows inputs
+            fade = 255; //no transparency on images or text
             break;
 
         case transitionToControls:
+            //Bespoke transition state for transitioning from start menu to controls menu
+
             transitioning = true;
-            handleFade(-transitionChange)
+            handleFade(-transitionChange) //transitionChange is negative here as we're going to take away from fade (to make image more transparent)
+
             if (fade <= 0) {
-                console.log("active!")
-                endTransition = false;
                 transitioning = false;
-                currentTransitionText = controlsScreen;
+                currentTransitionText = controlsScreen; //sets controlScreen as display
                 setTransition(startTransition)
             }
             break;
 
-            case transitionToBlack:
-                transitioning = true;
-                handleFade(-transitionChange)
-                if (fade <= 0) {
-                    endTransition = false;
-                    transitioning = false;
-                    currentTransitionText = start;
-                    setTransition(transitionFromBlack)
-                }
-                break;
+        case transitionToBlack:
+            //For transitioning to pure black (between transition screen)
+            transitioning = true;
+            handleFade(-transitionChange)
+            if (fade <= 0) {
+                transitioning = false;
+                currentTransitionText = start;
+                setTransition(transitionFromBlack)
+            }
+            break;
                 
-                case transitionFromBlack:
-                    console.log(fade)
-                    transitioning = true;
-                    handleFade(+transitionChange)
-                    if (fade >= 255) {
-                        endTransition = false;
-                        transitioning = false;
-                        currentTransitionText = start;
-                        setTransition(waitTransition)
-                    }
-                    break;
+        case transitionFromBlack:
+            //For transitioning form black screen back to start screen
+            transitioning = true;
+            handleFade(+transitionChange)
+            if (fade >= 255) {
+                endTransition = false;
+                transitioning = false;
+                currentTransitionText = start;
+                setTransition(waitTransition)
+            }
+            break;
 
         case endTransition:
             transitioning = true;
@@ -103,9 +114,7 @@ function handleTransition() {
 
 }
 
-function setTransition(state, endDay) {
-
-    if (endDay != null) endDay();
+function setTransition(state) {
 
     //check if material should fade in or out
     if (state === startTransition) fade = 0;
@@ -117,6 +126,7 @@ function setTransition(state, endDay) {
 }
 
 function handleFade(change) {
+    //Each frame add the value of change to fade
     fade += change;
 }
 
@@ -131,42 +141,55 @@ function getTransitionText() {
     switch (currentTransitionText) {
         case start: //start
 
+            //Set Text Properties
             textFont(startFont)
             textAlign(CENTER)
-
+            
+            //Create a black box to display over anything on screen so that it looks like we're fading to black to cover map
             fill(0, 0, 0, fade);
             rect(0, 0, width, height);
         
+            //Display game title: STARMER SIMULATOR
             textSize(50),
             fill(228, 0, 59, fade)
             textStyle(BOLD)
             text("STARMER", width/2, height/2+130)
             text("SIMULATOR", width/2, height/2+180)
+
+            //Reset textStyle to normal for further stuff
             textStyle(NORMAL)
             
+            //Properties for non-title text
             fill(150, fade)
             textSize(15);
             text("Press C for CONTROLS", width/2, height/2+215)
             textSize(17)
             text("Press SPACE BAR to START GAME", width/2, height/2+240)
             
-            tint(255, fade)
+            //Create imagine
+            tint(255, fade) //changes the hue of the image
             imageMode(CENTER)
             image(startImage, width/2, 180, 550, 300)
-            noTint();
-            imageMode(CORNER)
+            
+            //RESET SPECIAL PARAMETERS TO NOT EFFECT IMAGES LOADED AFTER THE TITLE IMAGE
+            noTint(); //removes any tint for any further images loaded after the title image (i.e. everything else in the game)
+            imageMode(CORNER) 
             break;
 
         case controlsScreen:
 
+            //Create a black box to display over anything on screen so that it looks like we're fading to black, for saftey here
             fill(0, 0, 0, fade);
             rect(0, 0, width, height);
 
+            //Handle control text
             fill(228, 0, 59,fade)
             textFont(startFont)
             textAlign(CENTER);
             textSize(50)
             text("CONTROLS", width/2, 125);
+
+            //Handle images and text to explain controls 
             tint(255, fade)
             noSmooth();
             image(wsad, width*0.15, 150, 200, 200)
@@ -176,20 +199,29 @@ function getTransitionText() {
             image(spacebarSprite, width*0.15, 320, 200, 200)
             text("Interact With NPCs/Podium \n\n Select Dialogue Option", width*0.5, 390, 300, 100)
 
+            //Handle text to instruct player how to go back to start screen
+            fill(150, fade)
+            textSize(15);
+            text("Press C to go back to START screen", width/2, height/2+255)
+
             break;
 
         case kicked:
 
-            textAlign(CENTER)
-            textFont (startFont)
-
+            //Creates black box that fades over map to make it look like a fade to black
             fill(0, 0, 0, fade);
             rect(0, 0, width, height);
 
+            //Sets text properties for any text below
+            textAlign(CENTER)
+            textFont (startFont)
+
+            //Handle GAME OVER text
             textSize(40);
             fill(255);
             text("GAME OVER!", width/2, 150)
 
+            //Handle game over explanation:
             textSize(20);
             fill(228, 0, 59, fade);
             text("YOU WERE KICKED OUT OF", width/2, 250);
@@ -203,17 +235,21 @@ function getTransitionText() {
             break;
 
         case lose:
-            
-            textAlign(CENTER)
-            textFont (startFont)
 
+            //Creates black box that fades over map to make it look like a fade to black
             fill(0, 0, 0, fade);
             rect(0, 0, width, height);
 
+            //Sets text properties for any text below
+            textAlign(CENTER)
+            textFont (startFont)
+
+            //Handle GAME OVER text
             textSize(40);
             fill(255);
             text("GAME OVER!", width/2, 150)
 
+            //Handle game over explanation:
             textSize(30);
             fill(228, 0, 59, fade);
             text("THE PRESS THINK", width/2, 250);
@@ -228,13 +264,15 @@ function getTransitionText() {
         
         case win:
 
-
-            textAlign(CENTER)
-            textFont (startFont)
-
+            //Creates black box that fades over map to make it look like a fade to black
             fill(0, 0, 0, fade);
             rect(0, 0, width, height);
 
+            //Sets text properties for any text below
+            textAlign(CENTER)
+            textFont (startFont)
+
+            //Handle win text
             textSize(40);
             fill(255);
             text("CONGRATULATIONS!", width/2, 150)
@@ -243,6 +281,7 @@ function getTransitionText() {
             fill(228, 0, 59, fade);
             text("You won!", width/2, 200);
 
+            //Handle what to display as win text
             textSize(15);
             rectMode(CENTER)
             textLeading(20)
@@ -256,11 +295,6 @@ function getTransitionText() {
 }
 
 function setWinText() {
+    //Selects a random string from the winText array and stores index in a variable
     winTextIndex = Math.round(random(winText.length-1))
-    console.log(winTextIndex)
-}
-
-function endGame(outcome) {
-    currentTransitionText = outcome;
-    setTransition(startTransition);
 }
