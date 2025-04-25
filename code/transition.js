@@ -22,12 +22,12 @@ let kicked = 2;
 let lose = 3;
 let win = 4;
 
-let currentTransitionText = start; //Currently displayed value in currentTransitioNText, defaults to start on intitialisation
+let transitionScreen = start; //Currently displayed value in currentTransitioNText, defaults to start on intitialisation
 
 
 //Array of winText to display on win screen, a random one is picked
 let winText = [
-    "The University of York estimates 57,000 people died due to austerity cuts.\nHow many more will die due Labour's disability cuts?",
+    "The University of York estimates that cuts to social care between 2010-2014 caused 57,000 deaths.\nHow many more will die due Labour's disability cuts?",
     "The Labour Party refuses to remove the two-child benefit cap. Child Poverty Action Group estimates 10,000 more children live in poverty since Labour's election.",
     "EveryDoctor found that since 2023, Labour Party MPs have received over £2 million in donations from donors linked to private healthcare. This is four times more than all other parties combined.",
     "You feel nothing."
@@ -43,7 +43,7 @@ function handleTransition() {
 
             transitioning = true; //sets transitioning to true to stop certain inputs in controls.js
 
-            if (currentTransitionText != controlsScreen) { //if not on control screen...
+            if (transitionScreen != controlsScreen) { //if not on control screen...
                 mapEnabledDraw(); //Keep map loaded so it appears behind the transition box
             }
 
@@ -68,7 +68,7 @@ function handleTransition() {
 
             if (fade <= 0) {
                 transitioning = false;
-                currentTransitionText = controlsScreen; //sets controlScreen as display
+                transitionScreen = controlsScreen; //sets controlScreen as display
                 setTransition(startTransition)
             }
             break;
@@ -79,7 +79,7 @@ function handleTransition() {
             handleFade(-transitionChange)
             if (fade <= 0) {
                 transitioning = false;
-                currentTransitionText = start;
+                transitionScreen = start;
                 setTransition(transitionFromBlack)
             }
             break;
@@ -91,7 +91,7 @@ function handleTransition() {
             if (fade >= 255) {
                 endTransition = false;
                 transitioning = false;
-                currentTransitionText = start;
+                transitionScreen = start;
                 setTransition(waitTransition)
             }
             break;
@@ -109,7 +109,7 @@ function handleTransition() {
     }
    //console.log("Inside handleTransition, transitionState is " + transitionState)
 
-    transitionContent = currentTransitionText;
+    transitionContent = transitionScreen;
     getTransitionText()
 
 }
@@ -138,7 +138,7 @@ let transitionContent;
 
 function getTransitionText() {
     //console.log(currentDay)
-    switch (currentTransitionText) {
+    switch (transitionScreen) {
         case start: //start
 
             //Set Text Properties
@@ -297,4 +297,10 @@ function getTransitionText() {
 function setWinText() {
     //Selects a random string from the winText array and stores index in a variable
     winTextIndex = Math.round(random(winText.length-1))
+}
+
+//This is called from text to end the game. endState = whatever "transitionScreen" is
+function endGame(endState) {
+    transitionScreen = endState;
+    setTransition(startTransition)
 }

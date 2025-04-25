@@ -18,9 +18,12 @@ let controls = {
 
 function keyPressed() {
 
-    //IF PLAYER PRESSES SPACE KEY, CHECKS WHICH DIRECTION PLAYER IS IN THEN 
-    if (keyCode === controls.spacebar && gameState === walk) {
+    //------------------------DIALOGUE CONTROLS------------------------//
 
+    //TO TALK TO NPC
+    if (keyCode === controls.spacebar && gameState === walk) { 
+        //This checks which direction the player is facing
+        
         let dirX;
         let dirY;
 
@@ -42,14 +45,18 @@ function keyPressed() {
                 dirY = 0;
         }
 
+        //Then checks through all npcs in activeNPCs array...
         for (let npc = 0; npc < activeNPCs.length; npc++) {
 
+            //And checks if there is an NPC in the tile the player is facing
             if (activeNPCs[npc].tileX === (player.tileX + dirX) && activeNPCs[npc].tileY === (player.tileY + dirY)) {
+                //If there is, starts dialogue
                 switchState(dialogue);
                 startDialogue(activeNPCs[npc]);
             }
         }
 
+        //This does the same thing, but adds a special condition to check if the NPC is a podium (the podium is an instantiation of the NPC class)
         if (player.xPos === podium.xPos && player.yPos === podium.tileY*tileSize && currentLevel.name === "exterior") {
             switchState(dialogue);
             press = true;
@@ -57,20 +64,12 @@ function keyPressed() {
         }
     } 
 
-    //IF PLAYER IN DIALOGUE AND NO RESPONSE, MOVE TO NEXT NODE (OR END)
+    //PLAYER PRESSES SPACE BAR TO UPDATE DIALOGUE NODE
     else if (keyCode === controls.spacebar && (gameState === dialogue || gameState === respond)) {
         updateDialogue(); //checks whether to end Dialogue or move to next Node
     } 
 
-    //IF IN TRANSITION STATE
-    else if (gameState === transition && !transitioning && currentTransitionText === start) {
-        if (keyCode === controls.spacebar) setTransition(endTransition);
-        else if (keyCode === controls.c) setTransition(transitionToControls)
-    }
-    else if (keyCode === controls.c && gameState === transition && !transitioning && currentTransitionText === controlsScreen) {
-        setTransition(transitionToBlack)
-    }
-
+    //Allows the player to scroll through dialogue options
     if (gameState === respond) {
         if (keyCode === controls.up) {
         currentSelection--
@@ -78,28 +77,26 @@ function keyPressed() {
         else if (keyCode === controls.down) {
         currentSelection++
         }
-        
     }
 
-    //TOGGLES DEBUG DISPLAY FOR MAP
+    //------------------------TRANSITION CONTROLS------------------------//
+
+    //... to move from start screen to gameplay
+    else if (gameState === transition && !transitioning && transitionScreen === start) {
+        if (keyCode === controls.spacebar) setTransition(endTransition);
+        else if (keyCode === controls.c) setTransition(transitionToControls)
+    }
+    
+    //... if player wants to open controls screen
+    else if (keyCode === controls.c && gameState === transition && !transitioning && transitionScreen === controlsScreen) {
+        setTransition(transitionToBlack)
+    }
+
+    //------------------------MISCELLANEOUS INPUTS------------------------//
+
+    //TOGGLES DEBUG
     if (keyCode === controls.slash) {
-        debug = !debug;
-    }
-
-    //TOOGLES BETWEEN WALK AND DIALOGUE STATES FOR DEBUG
-    if (keyCode === controls.shift) { // FOR DEBUG
-        if (gameState === walk) {
-            nextState(dialogue)
-        } else if (gameState === dialogue) {
-            nextState(walk)
-        }
-    }
-
-    if (keyCode === controls.f && debug) {
-        flipDialogueBox = !flipDialogueBox;
-    }
-
-    if (keyCode === controls.f && !debug) {
-        setTransition(startTransition)
+        //The commented out code below will enable the debug controls. This is commented out as this should only be active for debugging, not for a finished release!
+        //debug = !debug; 
     }
 }
